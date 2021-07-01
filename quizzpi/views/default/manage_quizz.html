@@ -1,0 +1,410 @@
+{{extend 'layout.html'}}
+<link rel="stylesheet" href="{{=URL('static','css/gras-item.css')}}"/>
+{{ if len(request.args)== 1:
+import re
+# on est sur la page d'affichage de la liste des quizz
+=XML('Choisir une cat&eacute;gorie: ')
+=BR()
+=DIV(select_code)
+=BR()
+pass
+# lignes de debug
+#=BR()
+#=B(str(request.vars))
+# quelque soit le cas on affiche mygrid
+=mygrid
+if len(request.args) == 1: 
+}}
+<!-- 
+ style pour affichage de la liste des déroulantes des categories pour la sélection des quizz à déplacer ou supprimer 
+-->
+<link rel="stylesheet" href="{{=URL('static','css/movecat.css')}}"/>
+<script>
+    // on cache le formulaire de recherche pour les quizz 
+    // mais on ne l'a pas desactive dans mygrid car il sert quand meme
+    // pour filtrer les quizz selon la categorie selectionne
+    $("form").eq(0).hide();
+    {{ if  'keywords' in request.vars: 
+    # on regarde si une categorie n'a pas ete selectionnee
+        _keyw = request.vars.keywords.split('=')
+        if _keyw[0] == 'quizz_quizz.Categorie':
+           id_cat = re.findall(r'\d+', _keyw[1])
+           # si c'est le cas on met a jour la liste deroulante
+        }} 
+            $("#quizz_quizz_Categorie").val({{=id_cat[0]}});
+        {{pass
+        else:}}
+            /* dans le cas contraire on affiche tout */
+            $("#quizz_quizz_Categorie").val(-1);
+    {{pass}}
+    /* action a effectuer lors du choix de la categorie a visionner */
+    $("#quizz_quizz_Categorie").change(function(){
+           categorie_id = $(this).val();
+           /* on se sert du filtre de recherche qui existe deja */
+           if (categorie_id == -1)
+              $('#w2p_keywords').val('');
+           else
+             $('#w2p_keywords').val('quizz_quizz.Categorie="'+categorie_id+'"');
+          /* on valide le formulaire de recherche */
+           $("form").eq(0).trigger('submit');
+    });
+    /* actions a effectuer lors de l'affichage de la liste des quizz */
+    /* ajout du bouton "ajout" en haut en bas de la liste des quizz */
+    /* on place un bouton Ajouter en haut et en bas de la table de la liste des quizz */
+    var ajout = $("a[title='Add record to database']");
+    ajout.append('<span class="buttontext button" title="Add record to database">Ajouter</span>');
+    ajout.hide();
+    if ($("table").length)
+    {
+        $("table").before(ajout);
+        ajout.show();
+        $("table").after(ajout.clone());
+    } 
+    else
+    {
+      $(".web2py_table").after(ajout);
+      ajout.show();
+      $(".web2py_table").html("<div>Aucun quizz</div>");
+    }
+    /* on cache la case a cocher permettant de recuperer l'id de la categorie dans laquelle deplacer les questions */
+    $("#cat_to_move").hide();
+    /* on recupere les 2 input generes automatiquement par mygrid par l'option "selectable" */
+    input_select_move = $(".web2py_table_selectable_actions > input").eq(0);
+    input_select_del = $(".web2py_table_selectable_actions > input").eq(1);
+    /* on rajoute des classes pour avoir des "jolis" boutons */
+    input_select_del.addClass("button btn btn-default btn-secondary");
+    input_select_move.addClass("button btn btn-default btn-secondary");
+    /* on place ces boutons à la fin du formulaire associé à la liste des quizz */
+    $("form").eq(1).append('<BR>','{{=SPAN(XML("Avec la s&eacute;lection : "),_id="_with_select")}}',input_select_del,'&nbsp;',input_select_move,'{{=select_move}}','<BR>');
+    //$("form").eq(1).append('<BR>','{{=SPAN(XML("Avec la s&eacute;lection : "),_id="_with_select")}}',input_select_del,'<BR>');
+    /* on rajoute une case à cocher pour tout sélectionner */
+    $("th[class='']").eq(0).html("<input type='checkbox' id='_select_all' />");
+    $("#_select_all").click(function(){
+    _status = $(this).prop('checked');
+    if (_status)
+    {
+        /* attention ceci coche aussi la case cachée cat_to_move */
+        $("input[name='records']").prop("checked",true);
+        $("input[name='records']").parent().parent().removeClass("normal_ligne").addClass("gras_ligne");
+        $("#_with_select").removeClass("normal_ligne").addClass("gras_ligne");
+    }    
+    else
+    {
+        /* la case cachée cat_to_move est ausi déselectionnée */
+        $("input[name='records']").prop("checked",false);    
+        $("input[name='records']").parent().parent().removeClass("gras_ligne").addClass("normal_ligne");
+        $("#_with_select").removeClass("gras_ligne").addClass("normal_ligne");
+    }
+    });
+    /* on change le texte en gras quand une ligne est selectionnee */
+    /* et on change en gras la phrase 'Avec la sélection' */
+    $("input[name='records']").click(function(){
+       _status = $(this).prop('checked');
+
+       nb_select = $("input[name='records']:checked").length;
+       /* pour compter le nombre de quizz, il ne faut pas prendre en compte
+       la case à cocher qui permet de transemttre l'id de la catégorie pour le déplacement des quizz */
+       nb_quizzes = $("input[name='records']").length - 1;
+        if (_status)
+       {
+           $(this).parent().parent().removeClass("normal_ligne").addClass("gras_ligne");
+           $("#_with_select").removeClass("normal_ligne").addClass("gras_ligne");
+           $("#cat_to_move").prop("checked",true);
+           if (nb_select == nb_quizzes + 1)  $("#_select_all").prop('checked','true');
+       }
+       else
+       {
+          $(this).parent().parent().removeClass("gras_ligne").addClass("normal_ligne");
+          $("#_select_all").prop('checked',false);
+           $("#cat_to_move").prop("checked",false);
+          nb_select = $("input[name='records']:checked").length;
+          if (nb_select == 0)
+          {
+              $("#_with_select").removeClass("gras_ligne").addClass("normal_ligne");
+              $("#cat_to_move").prop('checked',false);
+          }
+       }
+    });
+
+    /* gestion du deplacement et de la suppression des quizzes selectionnes*/
+    $("input[name='submit_0'],input[name='submit_1']").click(function(e){
+        $("#cat_to_move").val($("#_move_select").val());
+        nb_selections = $("input[name='records']:checked").length;
+        if (nb_selections == 0)
+        {
+            alert("{{=XML('Aucune quizz sélectionné')}}");
+            e.preventDefault();
+        }
+        else if ($(this).attr('name') == 'submit_1')
+        {
+            /* dans le cas d'une suppression inutile de transmettre l'id de la catégorie via la case cachée */
+            $("#cat_to_move").prop("checked",false);
+            if (nb_selections == 1)
+                choix = confirm("Etes-vous certain de vouloir\n supprimer le quizz sélectionné ?");
+            else
+                choix = confirm("Etes-vous certain de vouloir\n supprimer les quizzs sélectionnés ?");
+            if (!choix)
+                e.preventDefault();
+        }
+        else
+            /* on coche automatiquement cette case de façon à pouvoir transmettre l'id de la categorie selectionnee */
+            $("#cat_to_move").prop("checked",true);
+    });
+    // on modifie l'icone view pour mettre un lanceur et on change le titre de l'aide    
+    $(".magnifier").removeClass("magnifier").addClass("fa fa-play-circle").parent().attr("title","Lancer");
+</script>
+{{pass
+if len(request.args)>1:
+=DIV(_id='_show_enonce')
+# on a clique sur apercu ou editer ou creer
+}}
+<style>
+  #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+  #sortable li { margin: 0 5px 5px 5px; padding: 5px; font-size: 1.2em; height: 1.5em; }
+  html>body #sortable li { height: 1.5em; line-height: 1.2em; }
+  .ui-state-highlight { height: 1.5em; line-height: 1.2em; }
+</style>
+<link href="{{=URL('static','css/melange.css')}}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{{=URL('static','css/showenonce.css')}}"/>
+<link rel="stylesheet" href="{{=URL('static','css/jquery-ui.min.css')}}"/>
+<script src="{{=URL('static','js/jquery-ui.min.js')}}"></script>
+<script>
+    $("#_show_enonce").hide()
+    $("#_show_enonce").click(function(){
+    $(this).html("");
+    $(this).hide();
+    }
+    );
+    $("#quizz_quizz_id__row").hide();
+    $("#quizz_quizz_Questions__row").hide(); 
+    /* actions a effectuer que l'on soit en mode creation ou edition */    
+    /* on cache la case à cocher permettant de supprimer le quizz en cours d'édition */
+    $("#delete_record, #delete_record__label").hide();
+    $("#quizz_quizz_Melange__label").text("Mélanger les questions");
+    opt_melange = $("#quizz_quizz_Melange").val();
+    /* on definit la valeur de value à "Oui" ou "Non" selon la valeur de opt_melange pour que la
+    bonne case soit cochee */
+    if (opt_melange == "Non")
+        newbalise = '{{=DIV(INPUT(_type="radio", _name="Melange", _value="Oui", value="Non",_id="Yes"),LABEL("Oui",_for="Yes"),XML("&nbsp;"),INPUT(_type="radio", _name="Melange", _value="Non", value="Non", _id="No"),LABEL("Non",_for="No"),_class="radio-toolbar")}}';
+    else
+    newbalise = '{{=DIV(INPUT(_type="radio", _name="Melange", _value="Oui", value="Oui",_id="Yes"),LABEL("Oui",_for="Yes"),XML("&nbsp;"),INPUT(_type="radio", _name="Melange", _value="Non", value="Oui", _id="No"),LABEL("Non",_for="No"),_class="radio-toolbar")}}';    
+    $("#quizz_quizz_Melange").replaceWith(newbalise);
+    /* ici on remplace le menu de selection de la categorie par
+    la liste deroulante creee dans default.py */
+    $("#quizz_quizz_Categorie").replaceWith('{{=select_code}}');
+    /* on cache la case a cocher permettant de recuperer l'id de la categorie dans laquelle deplacer les questions */
+    $("#cat_to_move").hide();
+    /* on cache l'aperçu pour le mettre ailleurs */
+    /* view sera vide dans le cas d'une nouvelle question car la fonction grid 
+    ne renvoie pas le code d'un bouton d'Apercu */
+    view = $("a[title='Aperçu']")
+    //new_view = view.clone()
+    view.hide()
+    /* on remplace le texte par defaut du bouton de soumission du formulaire */
+    save_and_quit_button = $("input[type='submit']").val("Sauvegarder et Quitter");
+    /* on redesign le look du bouton Apercu */
+    //new_view.removeClass("button btn btn-default btn-secondary").addClass("btn btn-primary");
+    /* on place en fin de page les boutons Apercu et Sauvegarder */     
+    $("input[type='submit']").before(view,'<input class="btn btn-primary" type="submit" value="Sauvegarder" />');
+    /* gestion pour le click sur "Sauvegarder" *
+    /* val = 1 ==> on est sur la page de creation d'un quizz */
+    /* val = 2 ==> on est sur la page d'edition d'un quizz */
+    /* ceci permet de gerer l'execution de la fonction check_validation dans default.py */    
+    $("input[value='Sauvegarder']").click(function(e){
+        {{if (request.args[1] == 'new'):}}
+             $("input[name='justsave']").val("1");
+        {{else:}}
+             $("input[name='justsave']").val("2");
+        {{pass}}
+    });
+    $("input[value='Sauvegarder et Quitter']").click(function(e){
+        $("input[name='justsave']").val("3");
+    });
+</script>
+{{if request.args[1] == "edit":}}
+    <script>
+    // action permettant de recuperer dans l'ordre d'affichage la liste des id des questions composant le quizz    
+    $("form").submit(function(){
+         liste_id_quizz=''
+         // on regarde si des questions existent dans le quizz --> présence d'un tableau
+         questions_presentes = $("tr").slice(1);
+         if (questions_presentes.length > 0)
+         {
+             questions_presentes.each(function(){
+                 liste_id_quizz = liste_id_quizz + ':' + $(this).attr('id');
+             });
+            $("input[name='liste_id_quizz']").val(liste_id_quizz.substring(1));
+         }            
+    });
+   // on cree le bouton permettant d'ajouter des questions
+    modify_quizz = save_and_quit_button.after('<input class="btn btn-primary" type="button" id = "updatequizz" value="Ajouter Questions"/>');
+ //   refresh_quizz = $("#updatequizz").after('<input class="btn btn-primary" type="button" id = "refreshquizz" value="Rafraichir liste des questions"/>');        
+   // action a effectuer quand on clique sur les boutons définis ci-dessus     
+    $("#updatequizz").click(function(e){
+       e.preventDefault();
+        window.open("{{=URL('manage', args=['quizz_quizz','update', 'quizz_quizz'],vars=dict(quizznum=request.args(3)),user_signature=True,hash_vars=False)}}", 'PopupAdd', 'location=no,toolbar=no,menubar=no,scrollbars=1,resizable=1,width=900,height='+Math.floor(window.screen.availHeight*0.8));
+    });    
+/*    $("#refreshquizz").click(function(e){
+       e.preventDefault();
+        document.location.reload();
+    });*/    
+  </script>
+{{# affichage de la liste des questions courantes
+  liste_questions = db(db.quizz_quizz.id == request.args[3]).select(db.quizz_quizz.Questions) 
+  # cette requete renvoie toujours quelque chose, au cas où il n'y a toujours pas de question dans le quizz
+  # elle renvoie la liste [-1]
+  if liste_questions[0].Questions[0] == -1:
+         =B('Aucune question')
+  else:
+         liste_questions = liste_questions[0].Questions
+         =B(XML(str(len(liste_questions))+ ' questions pr&eacute;sentes dans le quizz'))
+         =BR()
+         =BR()
+         classe_parite = ["w2p_even even with_id show","w2p_odd odd with_id show"]
+      }}
+<div class = "web2py_grid">
+<div class="web2py_table">
+<div class="web2py_htmltable" style="width:100%;overflow-x:auto;-ms-overflow-x:scroll">
+<table><colgroup><col data-column="1" id="quizz_banque-Titre" /><col data-column="2" id="quizz_banque-Enonce" /></colgroup>
+    <thead><tr class=""><th class=""><input type='checkbox' id='_select_all' /></th><th class="">Titre</th><th class="">&Eacute;nonc&eacute;</th><th class=""></th></tr></thead>
+    <tbody id="sortable">
+    {{import re
+      cpt = 0
+      max_titre = 50
+      max_enonce = 120
+      for idq in liste_questions:
+      question = db(db.quizz_banque.id == idq).select(db.quizz_banque.id,db.quizz_banque.Titre,db.quizz_banque.Enonce)
+      question = question[0]
+      if (len(question.Titre) >= max_titre):
+        question.Titre = question.Titre[:max_titre]+'...'
+      pass
+      if (len(question.Enonce) >= max_enonce):
+        question.Enonce = question.Enonce[:max_enonce]+'...'
+      pass
+      pattern = r'<[ ]*script.*?\/[ ]*script[ ]*>'  
+      question.Enonce = re.sub(pattern, '', question.Enonce, flags=(re.IGNORECASE | re.MULTILINE | re.DOTALL))        
+      =TR(TD(INPUT(_name="myrecords",_type="checkbox")),TD(question.Titre),TD(XML(question.Enonce)),TD(A(SPAN(_class="icon magnifier icon-zoom-in glyphicon glyphicon-zoom-in"),_href=URL('manage',args=['quizz_banque','view','quizz_banque',question.id],user_signature=True),_title="Aperçu",_class="button btn btn-default btn-secondary"),_class="row_buttons", _nowrap="nowrap"),_class=classe_parite[cpt]+ "ui-state-default",_id=question.id, data={'show':0})
+      cpt = 1 - cpt
+      pass
+    }}
+    </tbody>
+</table> 
+</div>    
+</div>  
+    <br>
+    {{# on place ici le bouton "Supprimer la selection"
+    =form_delete}}
+</div>
+<script>    
+    $( "#sortable" ).sortable({
+      placeholder: "ui-state-highlight"
+    });
+    $("#sortable" ).disableSelection();
+    /*code pour faire apparaître une fenêtre de prévisualisation
+    quand on clique sur l'enonce d'une question */
+    $("tr.with_id").each(function(){
+        enonce = $(this).find("td").eq(2);
+        enonce.click(function(e){
+            if ($("#_show_enonce").is(":hidden"))
+                $(this).parent().attr('data-show',0);
+            show = $(this).parent().attr('data-show');
+            if (show == 0)
+            {
+                position = $(this).position();
+                $("#_show_enonce").css("top",20);
+                $("#_show_enonce").css("left",20);        
+                $("#_show_enonce").load("/quizzpi/default/view_enonce/"+$(this).parent().attr('id'));
+                $("#_show_enonce").show();
+               $(this).parent().attr('data-show',1);
+            }
+           else
+           {
+               $(this).parent().attr('data-show',0);
+               $("#_show_enonce").html("");
+               $("#_show_enonce").hide();
+           }
+        });
+    });
+    $("#_select_all").click(function(){
+    _status = $(this).prop('checked');
+    /* ici le formulaire ne provient pas d'un mygrid, on l'a genere precedemment, du coup inutile que les checkbox soient declarees
+    avec un name=records vu que l'on va gerer nous meme l'effacement. Lors de la creation du formulaire on a declare les checkbox avec le name=myrecords */
+    if (_status)
+    {
+        $("input[name='myrecords']").prop("checked",true);
+        $("input[name='myrecords']").parent().parent().removeClass("normal_ligne").addClass("gras_ligne");
+        $("#_with_select").removeClass("normal_ligne").addClass("gras_ligne");
+    }    
+    else
+    {
+        $("input[name='myrecords']").prop("checked",false);    
+        $("input[name='myrecords']").parent().parent().removeClass("gras_ligne").addClass("normal_ligne");
+        $("#_with_select").removeClass("gras_ligne").addClass("normal_ligne");
+    }
+    });
+    /* on change le texte en gras quand une ligne est selectionnee */
+    /* et on change en gras la phrase 'Avec la sélection' */
+    $("input[name='myrecords']").click(function(){
+       _status = $(this).prop('checked');
+       nb_select = $("input[name='myrecords']:checked").length;
+       nb_quizzs = $("input[name='myrecords']").length;
+        if (_status)
+       {
+           $(this).parent().parent().removeClass("normal_ligne").addClass("gras_ligne");
+           $("#_with_select").removeClass("normal_ligne").addClass("gras_ligne");
+           if (nb_select == nb_quizzs)  $("#_select_all").prop('checked','true');
+       }
+       else
+       {
+          $(this).parent().parent().removeClass("gras_ligne").addClass("normal_ligne");
+          $("#_select_all").prop('checked',false);
+          nb_select = $("input[name='records']:checked").length;
+          if (nb_select == 0)
+          {
+              $("#_with_select").removeClass("gras_ligne").addClass("normal_ligne");
+          }
+       }
+    });
+    /* actions a effectuer pour effacer des questions du quizz */    
+    $("form").eq(1).submit(function(){
+        // on recupere dans chaine les id des questions selectionnees 
+        chaine =''
+        $('input[name="myrecords"]:checked').parent().parent().each(function(){
+        chaine = chaine + ':' + $(this).attr('id');
+        });
+        if (chaine.length == 0)
+        {
+            alert('Vous devez sélectionner au moins une question');
+            event.preventDefault();
+            return false;
+        }
+        // la chaine retournee est de la forme :id1:id2:... on supprime le premier car
+        // et on place le tout dans le champ cache
+        $("input[name='liste_q_to_del']").val(chaine.substring(1));
+    });
+</script>
+{{
+  pass
+# fin de la portion edition
+  pass
+}}
+{{
+# fin portion edition ou creation
+pass
+}}
+<script>
+ /* action a effectuer pour le bouton Lancer du quizz*/
+$("a[title='Lancer']").click(function(e) {
+    idquizz = $(this).attr("href");
+    idquizz = idquizz.split('/')[7] ;
+    idquizz = idquizz.split('?')[0] ;
+    link = "{{=URL('prelaunchquizz',args=['idquizz'],user_signature=True)}}";
+    link = link.replace('idquizz',idquizz);
+    window.open(link, 'PopupSlide', 'scrollbars=1,resizable=1,width=900,height='+Math.floor(window.screen.availHeight*0.8)); 
+    return false;});
+ /* action a effectuer pour le bouton Apercu permettant de voir le contenu de l'une des questions du quizz*/
+$("a[title='Aperçu']").click(function() {
+    link = $(this).attr("href");
+    window.open(link, 'PopupQuizzView', 'scrollbars=1,resizable=1,width=500,height='+Math.floor(window.screen.availHeight*0.8)); 
+    return false;});
+</script>

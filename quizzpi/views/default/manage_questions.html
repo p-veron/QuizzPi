@@ -1,0 +1,366 @@
+{{extend 'layout.html'}}
+<link rel="stylesheet" href="{{=URL('static','css/gras-item.css')}}"/>
+{{ if len(request.args)== 1:
+import re
+# on est sur la page d'affichage de la liste des questions
+=XML('Choisir une cat&eacute;gorie: ')
+=BR()
+=DIV(select_code)
+=BR()
+=XML('Cliquez dans la zone de saisie pour afficher la s&eacute;lection de filtres :')
+pass
+# fin du IF
+# lignes de debug
+#=BR()
+#=B(str(request.vars))
+# quelque soit le cas on affiche mygrid
+=mygrid
+if len(request.args) == 1: 
+=DIV(_id='_show_enonce')
+}}
+<link rel="stylesheet" href="{{=URL('static','css/movecat.css')}}"/>
+<link rel="stylesheet" href="{{=URL('static','css/showenonce.css')}}"/>
+<script>
+    {{ if  'keywords' in request.vars: 
+    # on regarde si une categorie n'a pas ete selectionnee
+        _keyw = request.vars.keywords.split('=')
+        if _keyw[0] == 'quizz_banque.Categorie':
+           id_cat = re.findall(r'\d+', _keyw[1])
+           # si c'est le cas on met a jour la liste deroulante
+        }} 
+            $("#quizz_banque_Categorie").val({{=id_cat[0]}});
+        {{pass
+     else:}}
+        /* dans le cas contraire on affiche tout */
+        $("#quizz_banque_Categorie").val(-1);
+    {{pass}}
+/* action a effectuer lors du choix de la categorie a visionner */
+$("#quizz_banque_Categorie").change(function(){
+           categorie_id = $(this).val();
+           /* on se sert du filtre de recherche qui existe deja */
+           if (categorie_id == -1)
+              $('#w2p_keywords').val('');
+           else
+             $('#w2p_keywords').val('quizz_banque.Categorie="'+categorie_id+'"');
+          /* on valide le formulaire de recherche */
+           $("form").eq(0).trigger('submit');
+});
+/* ici on intercepte l'action du bouton effacer qui sinon va supprimer le filtre pour le choix de la categorie */
+/* si jamais un filtre pour la categorie est en place, on recharge la page pour cette categorie */    
+$("input[value='Effacer']").click(function(e){
+    categorie_id = $("#quizz_banque_Categorie").val();
+    if (categorie_id != -1)
+          $('#w2p_keywords').val('quizz_banque.Categorie="'+categorie_id+'"');
+          /* on valide le formulaire de recherche */
+    $("form").eq(0).trigger('submit');
+    });
+    
+/* actions a effectuer lors de l'affichage de la banque de questions */
+/* ajout du bouton "ajout" en haut en bas de la banque de questions */
+/* on place un bouton Ajouter en haut et en bas de la table de la banque de questions */
+//var ajout = $("span[title='Add record to database']").parent();
+$("#_show_enonce").hide()
+$("#_show_enonce").click(function(){
+$(this).html("");
+$(this).hide();
+}
+);
+var ajout = $("a[title='Add record to database']");
+ajout.append('<span class="buttontext button" title="Add record to database">Ajouter</span>');
+$("table").before(ajout);
+$("table").after(ajout.clone());
+/* on retire les champs de filtre qu'on ne veut pas voir apparaitre */
+$("option[value='quizz_banque.id']").remove();
+$("option[value='quizz_banque.Categorie']").remove();
+$("option[value='quizz_banque.Melange']").remove();
+$("option[value='quizz_banque.modified_on']").remove();
+/* on remplace dans la zone de filtres le nom "Nature" par "Type" */
+$("option[value='quizz_banque.Nature']").text('Type');
+/* modification de la zone d'affichage de selection de filtres */
+$('input[value="New Search"]').attr('title','Ajouter le filtre dans la zone de recherche');    
+$('input[value="New Search"]').val('+ Filtre');    
+$('input[value="+ And"]').attr('title','Combiner avec un ET le filtre avec le filtre de la zone de recherche');    
+$('input[value="+ And"]').val('+ ET Filtre');    
+$('input[value="+ Or"]').attr('title','Combiner avec un OU le filtre avec le filtre de la zone de recherche');    
+$('input[value="+ Or"]').val('+ OU Filtre');    
+$('input[value="Close"]').val('Fermer');  
+/* on cache la case a cocher permettant de recuperer l'id de la categorie dans laquelle deplacer les questions */
+$("#cat_to_move").hide();
+/* on recupere les 2 inputs generes automatiquement par mygrid par l'option "selectable" */
+input_select_move = $(".web2py_table_selectable_actions > input").eq(0);
+input_select_del = $(".web2py_table_selectable_actions > input").eq(1);
+/* on rajoute des classes pour avoir des "jolis" boutons */
+input_select_del.addClass("button btn btn-default btn-secondary");
+input_select_move.addClass("button btn btn-default btn-secondary");
+/* on place ces boutons à la fin du formulaire associé à la liste des questions */
+$("form").eq(1).append('<BR>','{{=SPAN(XML("Avec la s&eacute;lection : "),_id="_with_select")}}',input_select_del,'&nbsp;',input_select_move,'{{=select_move}}','<BR>');
+/* on rajoute une case à cocher pour tout sélectionner */
+$("th[class='']").eq(0).html("<input type='checkbox' id='_select_all' />");
+$("#_select_all").click(function(){
+_status = $(this).prop('checked');
+if (_status)
+{
+    /* attention ceci coche aussi la case cachée cat_to_move */
+    $("input[name='records']").prop("checked",true);
+    $("input[name='records']").parent().parent().removeClass("normal_ligne").addClass("gras_ligne");
+    $("#_with_select").removeClass("normal_ligne").addClass("gras_ligne");
+}    
+else
+{
+    /* la case cachée cat_to_move est ausi déselectionnée */
+    $("input[name='records']").prop("checked",false);    
+    $("input[name='records']").parent().parent().removeClass("gras_ligne").addClass("normal_ligne");
+    $("#_with_select").removeClass("gras_ligne").addClass("normal_ligne");
+}
+});
+/* on change le texte en gras quand une ligne est selectionnee */
+/* et on change en gras la phrase 'Avec la sélection' */
+$("input[name='records']").click(function(){
+   _status = $(this).prop('checked');
+    
+   nb_select = $("input[name='records']:checked").length;
+   /* pour compter le nombre de questions, il ne faut pas prendre en compte
+   la case à cocher qui permet de transemttre l'id de la catégorie pour le déplacement des questions */
+   nb_questions = $("input[name='records']").length - 1;
+    if (_status)
+   {
+       $(this).parent().parent().removeClass("normal_ligne").addClass("gras_ligne");
+       $("#_with_select").removeClass("normal_ligne").addClass("gras_ligne");
+       $("#cat_to_move").prop("checked",true);
+       if (nb_select == nb_questions + 1)  $("#_select_all").prop('checked','true');
+   }
+   else
+   {
+      $(this).parent().parent().removeClass("gras_ligne").addClass("normal_ligne");
+      $("#_select_all").prop('checked',false);
+       $("#cat_to_move").prop("checked",false);
+      nb_select = $("input[name='records']:checked").length;
+      if (nb_select == 0)
+      {
+          $("#_with_select").removeClass("gras_ligne").addClass("normal_ligne");
+          $("#cat_to_move").prop('checked',false);
+      }
+   }
+});
+
+/* gestion du deplacement et de la suppression des questions selectionnees*/
+$("input[name='submit_0'],input[name='submit_1']").click(function(e){
+    $("#cat_to_move").val($("#_move_select").val());
+    nb_selections = $("input[name='records']:checked").length;
+    if (nb_selections == 0)
+    {
+        alert("{{=XML('Aucune question sélectionnée')}}");
+        e.preventDefault();
+    }
+    else if ($(this).attr('name') == 'submit_1')
+    {
+        /* dans le cas d'une suppression inutile de transmettre l'id de la catégorie via la case cachée */
+        $("#cat_to_move").prop("checked",false);
+        if (nb_selections == 1)
+            choix = confirm("Etes-vous certain de vouloir\n supprimer la question sélectionnée ?");
+        else
+            choix = confirm("Etes-vous certain de vouloir\n supprimer les questions sélectionnées ?");
+        if (!choix)
+            e.preventDefault();
+    }
+    else
+        /* on coche automatiquement cette case de façon à pouvoir transmettre l'id de la categorie selectionnee */
+        $("#cat_to_move").prop("checked",true);
+});
+/*code pur faire apparaître une fenêtre de prévisualisation
+quand on clique sur l'enonce d'une question */
+$("tr.with_id").each(function(){
+    enonce = $(this).find("td").eq(3);
+    /* pour aficher le texte html interprété on le parse */
+    toshow = $.parseHTML(enonce.text())[0].innerHTML
+    enonce.html(toshow);
+    enonce.click(function(e){
+        position = $(this).position();
+        $("#_show_enonce").css("top",position.top);
+        $("#_show_enonce").css("left",position.left);        
+        $("#_show_enonce").load("/quizzpi/default/view_enonce/"+$(this).parent().attr('id'));
+        $("#_show_enonce").show();
+    });
+});
+</script>
+{{pass
+if len(request.args)>1:
+# on a clique sur apercu ou editer ou creer
+# si on a clique sur apercu on a ete redirige par le code de la fonction manage_questions
+   if ((request.args[1] == 'edit') or (request.args[1] == 'new')):}}
+<link href="{{=URL('static','css/melange.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{=URL('static','js/codemirror/lib/codemirror.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{=URL('static','js/codemirror/theme/lesser-dark.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{=URL('static','css/preview-tex.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{=URL('static','css/prism.css')}}" rel="stylesheet" type="text/css" />
+
+<script src="{{=URL('static', 'js/codemirror/lib/codemirror.js')}}" type="text/javascript" charset="utf-8"></script>
+<script src="{{=URL('static', 'js/codemirror/mode/python/python.js')}}" type="text/javascript" charset="utf-8"></script>
+<script src="{{=URL('static', 'js/codemirror/addon/edit/matchbrackets.js')}}" type="text/javascript" charset="utf-8"></script>
+<script src="{{=URL('static', 'js/codemirror/addon/edit/closebrackets.js')}}" type="text/javascript" charset="utf-8"></script>
+<script src="{{=URL('static', 'js/tinymce/tinymce.min.js')}}" type="text/javascript" charset="utf-8"></script>
+<script src="{{=URL('static', 'js/tinymce/jquery.tinymce.min.js')}}" type="text/javascript" charset="utf-8"></script>
+<script src="{{=URL('static', 'js/tinymce/enonce.js')}}" type="text/javascript" charset="utf-8"></script>
+<script src="{{=URL('static', 'js/prism.js')}}" type="text/javascript" charset="utf-8"></script>
+<script>
+    var ScriptCodeMirror = CodeMirror.fromTextArea($('#quizz_banque_Script')[0],
+    {
+        lineNumbers: true,
+        mode: {name: "python", globalVars: true},
+        matchBrackets: true,
+        autoCloseBrackets: true,
+        theme: "lesser-dark"
+    });
+    var VerifCodeMirror = CodeMirror.fromTextArea($('#quizz_banque_Verification')[0],
+    {
+        lineNumbers: true,
+        mode: {name: "python", globalVars: true},
+        matchBrackets: true,
+        autoCloseBrackets: true,
+        theme: "lesser-dark"
+    });
+</script>
+{{if (request.args[1] == 'new') and ('_formname' not in request.vars):}}
+<script>
+    /* action a effectuer lorsque l'on cree une nouvelle question 
+     mais qu'il ne faut pas effectuer si on a deja soumis le formulaire de creation
+     et qu'il y avait des erreurs
+    c'est la presence de _formname dans request.vars qui nous indique si le formulaire a ete soumis */
+    $("#quizz_banque_id__row").hide();
+    $("#quizz_banque_Langage option[value='Aucun']").attr("selected", true);
+    $("#quizz_banque_Nature option[value='Simple']").attr("selected", true);
+    $("#quizz_banque_Script__row").hide();
+    $("#quizz_banque_Melange").val("Non");
+    $("#quizz_banque_Melange__row").hide();    
+    for (i=1; i<=8; i++)
+    {
+        $("#quizz_banque_Choix"+i+"__row").hide();
+    };
+    if ($("#quizz_banque_Nature").val() == 'Multiple')
+        $("#quizz_banque_Verification__row").hide();    
+</script>
+{{else:}}
+<script>
+    /* action a effectuer lors de l'edition d'une question existante */
+    $("#quizz_banque_id__row").hide();
+    if ($("#quizz_banque_Langage").val() == 'Aucun')
+        $("#quizz_banque_Script__row").hide();
+    if ($("#quizz_banque_Nature").val() == 'Simple')
+    {
+        for (i=1; i<=8; i++)
+        {
+            $("#quizz_banque_Choix"+i+"__row").hide();
+        }
+            $("#quizz_banque_Melange__row").hide();
+    }
+    else $("#quizz_banque_Verification__row").hide();
+</script>
+{{pass}}
+<script>
+/* actions a effectuer que l'on soit en mode creation ou edition */    
+/* on cache la case à cocher permettant de supprimer la question en cours d'édition */
+$("#delete_record, #delete_record__label").hide();
+$("#quizz_banque_Categorie__label").text("Catégorie");
+$("#quizz_banque_Enonce__label").text("Enoncé");
+$("#quizz_banque_Reponse__label").text("Réponse");
+$("#quizz_banque_Nature__label").text("Type");
+$("#quizz_banque_Melange__label").text("Mélanger les choix");
+opt_melange = $("#quizz_banque_Melange").val();
+/* on definit la valeur de value à "Oui" ou "Non" selon la valeur de opt_melange pour que la
+    bonne case soit cochee */
+if (opt_melange == "Non")
+newbalise = '{{=DIV(INPUT(_type="radio", _name="Melange", _value="Oui", value="Non",_id="Yes"),LABEL("Oui",_for="Yes"),XML("&nbsp;"),INPUT(_type="radio", _name="Melange", _value="Non", value="Non", _id="No"),LABEL("Non",_for="No"),_class="radio-toolbar")}}';
+else
+newbalise = '{{=DIV(INPUT(_type="radio", _name="Melange", _value="Oui", value="Oui",_id="Yes"),LABEL("Oui",_for="Yes"),XML("&nbsp;"),INPUT(_type="radio", _name="Melange", _value="Non", value="Oui", _id="No"),LABEL("Non",_for="No"),_class="radio-toolbar")}}';    
+$("#quizz_banque_Melange").replaceWith(newbalise);
+$("#quizz_banque_Langage").change(function(){
+    if ($("#quizz_banque_Langage").val() != 'Aucun')
+        if ($("#quizz_banque_Langage").val() == 'Sage')
+        {
+            alert('Fonctionnalité désactivée');
+            $("#quizz_banque_Langage").val('Aucun');
+        }
+        else
+        $("#quizz_banque_Script__row").show();
+    else
+    {
+        ScriptCodeMirror.setValue("");
+        $("#quizz_banque_Script__row").hide();
+    };
+});
+$("#quizz_banque_Nature").change(function(){
+    if ($("#quizz_banque_Nature").val() != 'Simple')
+    {
+        for (i=1; i<=8; i++)
+        {
+            $("#quizz_banque_Choix"+i+"__row").show();
+        }
+        $("#quizz_banque_Melange__row").show();
+        $("#quizz_banque_Verification__row").hide();        
+    }
+    else
+    {
+        for (i=1; i<=8; i++)
+        {
+            $("#quizz_banque_Choix"+i).val("");
+            $("#quizz_banque_Choix"+i+"__row").hide();
+        }
+        $("#quizz_banque_Melange").val("Non");
+        $("#quizz_banque_Melange__row").hide();
+        $("#quizz_banque_Verification__row").show();        
+    };
+})
+/* ici on remplace le menu de selection de la categorie par
+la liste deroulante creee dans default.py */
+$("#quizz_banque_Categorie").replaceWith('{{=select_code}}');
+/* on cache la case a cocher permettant de recuperer l'id de la categorie dans laquelle deplacer les questions */
+$("#cat_to_move").hide();
+//$("input[type='submit']").click(function(){
+//})
+/* on cache l'aperçu pour le mettre ailleurs */
+/* view sera vide dans le cas d'une nouvelle question car la fonction grid 
+ne renvoie pas le code d'un bouton d'Apercu */
+view = $("a[title='Aperçu']")
+new_view = view.clone()
+view.hide()
+/* on remplace le texte par defaut du bouton de soumission du formulaire */
+$("input[type='submit']").val("Sauvegarder et Quitter");
+/* on redesign le lokk du bouton Apercu */
+new_view.removeClass("button btn btn-default btn-secondary").addClass("btn btn-primary");
+/* on place en fin de page les boutons Apercu et Sauvegarder */     
+$("input[type='submit']").before(new_view,'<input class="btn btn-primary" type="submit" value="Sauvegarder" />');
+/* gestion pour le click sur "Sauvegarder" *
+/* val = 1 ==> on est sur la page de creaton d'une question */
+/* val = 2 ==> on est sur la page d'edition d'une question */
+/* ceci permet de gerer l'execultion de la fonction check_reponse dans default.py */    
+$("input[value='Sauvegarder']").click(function(e){
+    {{if (request.args[1] == 'new'):}}
+         $("input[name='justsave']").val("1");
+    {{else:}}
+         $("input[name='justsave']").val("2");
+    {{pass}}
+// $("form").eq(0).trigger('submit');
+});
+$("input[value='Sauvegarder et Quitter']").click(function(e){
+        $("input[name='justsave']").val("3");
+    });
+    
+</script>
+{{
+# fin portion edition ou creation
+pass
+}}
+{{
+# fin portion request.args contient des arguments
+pass
+# fin des blocs conditionnels
+pass
+}}
+<script>
+ /* action a effectuer pour le bouton Aperçu que ce soit lors de l'affichage d'une question ou lors 
+ de l'affichage de la banque de questions */
+$("a[title='Aperçu']").click(function() {
+    link = $(this).attr("href");
+    window.open(link, 'MyPopup', 'scrollbars=1,resizable=1,width=700,height='+Math.floor(window.screen.availHeight*0.8)); 
+    return false;});
+</script>

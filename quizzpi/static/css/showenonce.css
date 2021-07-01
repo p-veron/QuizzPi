@@ -1,0 +1,8 @@
+/*style pour afficher le texte du contenu d'un enonce */
+#_show_enonce{
+        position:absolute;
+        background-color: rgb(200, 200, 200);
+        z-index: 99;
+       /* height:100px;overflow:scroll;max-height:63%;
+        width:200px;overflow:scroll;max-width:70%;*/
+}

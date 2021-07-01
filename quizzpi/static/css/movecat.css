@@ -1,0 +1,9 @@
+/* style pour affichage de la liste déroulantes des categories pour la sélection des questions à déplacer ou supprimer */
+#_move_select{
+        width:55%;
+        display: inline;
+        position:relative;
+        vertical-align: middle;
+        margin: 0 0 0 5px;
+        height:38px;
+}

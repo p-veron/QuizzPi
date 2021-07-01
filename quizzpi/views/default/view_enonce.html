@@ -1,0 +1,17 @@
+<style>
+    .bandeau{
+        background-color: #dbe2e7;
+        width: 100%;
+        height: 30px;
+    }
+</style>
+{{
+import re
+pattern = r'<[ ]*script.*?\/[ ]*script[ ]*>'  
+titre = re.sub(pattern, '', titre, flags=(re.IGNORECASE | re.MULTILINE | re.DOTALL))
+=DIV(B(XML(titre)),_class='bandeau')
+}}
+{{
+enonce = re.sub(pattern, '', enonce, flags=(re.IGNORECASE | re.MULTILINE | re.DOTALL))
+=DIV(XML(enonce))
+}}

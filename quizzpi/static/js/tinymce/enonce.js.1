@@ -1,0 +1,96 @@
+function closepopup()
+{
+    $(".popup-tex").removeClass("tex-visible");
+    $(".popup-tex").hide();
+}
+function showpopup() {
+  $(".popup-tex").show();
+  $(".popup-tex").css("top",window.y);
+  $(".popup-tex").css("left",window.x);
+}
+$('#quizz_banque_Enonce').tinymce({
+  branding: false,
+  custom_ui_selector: '.popup-tex',
+  custom_undo_redo_levels: 10,
+  force_br_newlines : true,
+  force_p_newlines : false,
+  height: 500,
+  language : 'fr_FR',
+  menu : {
+     file : { title :'', items:''},
+     edit: { title: 'Edit', items: 'undo redo | cut copy paste | selectall | searchreplace' },
+     insert: { title: 'Insert', items: 'image link  charmap emoticons hr | insertdatetime' },
+     view : { title :'', items:''},
+     format: { title: 'Format', items: 'blockformats fontformats fontsizes lineheight | removeformat' },
+     tools : { title :'', items:''},
+     table : { title :'', items:''},
+  },
+  plugins: [
+    'lists advlist autolink link image charmap',
+    'searchreplace visualblocks code fullscreen',
+    'table paste code codesample hr insertdatetime',
+  ],
+  insertdatetime_formats: ['%H:%M:%S', '%d-%m-%Y', '%I:%M:%S %p', '%d/%m/%Y'],
+  setup: function (editor) {
+      var dialogue = {
+        title: 'Pr&eacute;visualisation TeX', // The dialog's title - displayed in the dialog header
+        body: {
+          type: 'panel', // The root body type - a Panel or TabPanel
+          items: [ // A list of panel components
+            {
+              type: 'htmlpanel', // A HTML panel component
+              html: 'Vous devez s&eacute;lectionner du code TeX'
+            }
+          ]
+        },
+        buttons: [ // A list of footer buttons
+          {
+            type: 'submit',
+            text: 'OK'
+          }
+      ],
+      onSubmit: function(api){
+          api.close();
+      }
+      };
+      editor.ui.registry.addButton('TeX', {
+          text: 'TeX',
+          tooltip : 'Prévisualiser TeX',
+          onAction: function (_) {
+              if ($(".popup-tex").hasClass("tex-visible"))
+                  closepopup();
+              else{
+                  selection = editor.selection.getContent({format: 'text'});
+                  if (selection.length != 0)
+                  {
+                      $(".popup-tex").text(selection);
+                      $(".popup-tex").addClass("tex-visible");
+                      MathJax.typeset([$(".popup-tex")[0]]);
+                      showpopup();
+                  }
+                  else {
+                      editor.windowManager.open(dialogue);
+                  }
+              }
+          }
+      });
+      editor.on('click',function(e) {
+          if ($(".popup-tex").hasClass("tex-visible"))
+              closepopup();
+        });
+      editor.on('mousemove',function(e){
+        window.x = e.pageX;
+        window.y = e.pageY;
+        });
+
+  },
+  toolbar: 'undo redo | bold italic underline strikethrough superscript subscript| alignleft alignright aligncenter alignjustify  outdent indent | table numlist bullist | forecolor backcolor | codesample  code TeX |'
+});
+$(function(){
+    $("#quizz_banque_enonce").after("<div class='popup_tex'></div>");
+    $(".popup-tex").hide();
+    $(".popup-tex").click(function(){
+        if ($(".popup-tex").hasClass("tex-visible"))
+                    closepopup();
+    })
+});

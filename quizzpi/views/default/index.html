@@ -1,0 +1,31 @@
+{{extend 'layout.html'}}
+{{block header}}
+<style>
+    body
+    {
+      background-color : rgba(255,255,255,0.8);  
+     }
+    
+    #logo
+    {
+        height:100%;
+    }
+    
+   .center 
+    {
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+    
+</style>
+<!-- <div class="jumbotron jumbotron-fluid background" style="background-color: #333; color:white; padding:30px;word-wrap:break-word;">
+  <div class="container center">
+    <h1 class="display-10">Quizz \(\pi\)</h1>
+  </div>
+</div>-->
+{{=DIV(DIV(IMG(_src=URL('static', 'images/quizzpi.png')),_class='center'),_id='logo')}}
+{{end}}

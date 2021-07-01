@@ -1,0 +1,69 @@
+{{extend 'layout.html'}}
+{{try:
+    liste_cat
+     except:}}
+        <div class="w2p_flash alert alert-dismissable">{{=response.flash or ''}}</div>
+      {{else:}}
+<style>
+body {
+    font-size:18px;
+}
+</style>
+{{
+# code pour le bouton retour
+# afficher uniquement en mode edition
+if len(request.args)>1:
+  if request.args[1] in ['edit','new']:
+  =DIV(A(SPAN(_class="icon arrowleft icon-arrow-left glyphicon glyphicon-arrow-left"),SPAN("Retour",_class="buttontext button",_title="Retour"),_href=URL("manage_categories",args=[request.args[0]],user_signature=True),_class="button btn btn-default btn-secondary"),_class="form_header row_buttons")
+   =BR()
+pass
+else:
+# on definit le style pour la presentation des categories
+}}
+<style>
+.header  {
+    height: 50px;
+    margin: 0;
+    background-color : #EBEBEB; 
+    text-align: center;
+    vertical-align: middle;
+    line-height: 50px;
+    font-size:22px;
+    margin-bottom:30px;
+}
+
+li {
+    color: #343a40;
+}
+ul ul ul ul  li {
+    list-style-type: disc;
+}
+.select_ok:hover { 
+   font-weight: bold;
+}
+</style>
+{{
+# fin de definition du style de la presentation des categories
+# on place le header de presentation
+=DIV(XML("Cat&eacute;gories disponibles"),_class="header")
+pass
+=liste_cat}}
+{{if len(request.args) == 1:}}
+<script>
+// code pour dupliquer le bouton ajout
+        var ajout = $("span[title='Add record to database']").parent();
+        $(".header").after(ajout);
+       $("#_liste_categories").after("<BR>",ajout.clone());
+// code pour gerer la suppression des categories
+       $("a[data-action=delete]").click(function(e){
+           ok = confirm("\u00cates-vous s\u00fbr de vouloir supprimer cette cat\u00e9gorie?");
+           if (!ok)
+           {
+               e.preventDefault();
+               e.stopImmediatePropagation();
+           }
+       });
+</script>    
+{{pass
+# fin du try
+pass}}

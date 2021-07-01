@@ -1,0 +1,18 @@
+{{extend 'layout.html'}}
+{{=student_grid}}
+<br><br>
+{{=formcsv}}
+<script>
+    // on cache le menu export car malgré le json=False dans mygrid, ce menu apparaît quand même, bug ??
+    $(".w2p_export_menu").hide();
+    $("input[value='importer']").click(function(e){
+        fichier = $("input[name='csvfile']").val();
+        if (fichier.length==0)
+        {
+            alert("Choisissez un fichier");
+            e.preventDefault();
+        }
+        else
+            $("form").trigger('submit');
+    })
+</script>

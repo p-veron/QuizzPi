@@ -1,0 +1,285 @@
+# -*- coding: utf-8 -*-
+# -------------------------------------------------------------------------
+# This is a sample controller
+# this file is released under public domain and you can use without limitations
+# -------------------------------------------------------------------------
+import os
+import subprocess
+import re
+import ast
+def index():
+# definir un formulaire pour remplir les champs d'une BD
+    form = SQLFORM(db.quizz_banque).process()
+#    rows = db(db.quizz_banque).select()
+# il faut penser à modifier le layout
+#    return form
+    return locals()
+
+def view_question():
+    q_ = db.quizz_banque(request.args(0))
+    num_question = request.args[0]
+    if (q_.Langage !='Aucun'):
+        # on va verifier que le temps d'execution du code ne depasse pas
+        # le timeout prévu
+        run_time_limit = 5 # secondes
+        pid = os.getpid()
+        # tout d'abord on cree un fichier python contenant le source
+        # python de la question en rajoutant pour chaque ligne de la forme
+        # __val = expression
+        # une instruction de la forme print('val_=',val_) 
+        # de façon a generer un script qui renvoie sur la sortie standard
+        # le nom des variables et leurs valeurs
+        interprete_python = "/usr/bin/python3"
+        interprete_sage = "/opt/SageMath/local/bin/python3"
+        if (q_.Langage == "Python"):
+            interprete = interprete_python
+        else:
+            interprete = interprete_sage
+        if interprete == interprete_sage:
+            script = "/tmp/question_"+str(num_question)+"_"+str(pid)+".sage.py"
+        else:
+            script = "/tmp/question_"+str(num_question)+"_"+str(pid)+".py"            
+        try:
+            fic_q = open(script,"wt",encoding="utf-8")
+        except Exception as erreur:
+            response.flash = "Erreur lors de la sauvegarde de votre script : "+str(erreur)
+            return(locals())
+        else:
+            if interprete == interprete_sage:
+                fic_q.write("from sage.all_cmdline import *\n")
+            fic_q.write('__toexec="""\n')
+            fic_q.write(q_.Script.replace('"',r'\"'))
+            fic_q.write('\n"""\n')
+            fic_q.write("import re\n__dicX_={}\n")
+            if interprete == interprete_python:
+                fic_q.write("exec(__toexec,{},__dicX_)")
+            else:
+                fic_q.write("sage_eval('None',cmds=__toexec,locals=__dicX_)\n")
+            fic_q.write("""
+__p = re.compile('^\s*(__[^ :]+)$')
+__retdicX_ = {}
+for __locvar_ in __dicX_:
+    __mXx_ = __p.match(__locvar_)
+    if __mXx_ is not None:
+""")
+            if interprete == interprete_python:
+                fic_q.write('        __retdicX_[__locvar_] = __dicX_[__locvar_]\n')
+            else:
+                fic_q.write('        __retdicX_[__locvar_] = str(__dicX_[__locvar_])\n')
+            fic_q.write('print(__retdicX_)\n')
+            fic_q.close()
+            try:
+                # on lance l'execution du script cree
+                # les sorties standard et erreur seront recuperees dans check_script_.stdout
+#                check_script_=subprocess.run(["/usr/bin/python3",script_python],timeout=run_time_limit,universal_newlines=True,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT, encoding="utf-8")
+                check_script_= subprocess.run([interprete,script],timeout=run_time_limit,universal_newlines=True,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT, encoding="utf-8")
+            except Exception as erreur:
+                message = str(erreur).lstrip().split(' ')
+                response.flash = """___Erreur lors de l'exécution
+de votre script :
+"""+script+"""
+"""+" ".join(message[3:])
+                return(locals())
+            else:
+                if check_script_.returncode!=0:
+                    response.flash = """___Erreur code retour lors de l'exécution
+de votre script :
+"""+check_script_.stdout.lstrip()
+                    return(locals())
+                # si tout s'est bien passe
+                # on evalue la sortie standard de façon à ce que
+                # les variables déclarées dans le formulaire
+                # soient créées, elles vont être placées dans dico_loc_
+                # qui est l'équivalent de locals()
+                # le deuxième paramètre de exec est utilisé pour passer
+                # le dico globals(), ici c'est inutile
+                # on doit placer check_script_ dans dico_loc pour que exec puisse fonctionner
+                #dico_loc_= {'q_':q_}
+                sortie__ = ast.literal_eval(check_script_.stdout)
+                for var_ in sortie__:
+                    q_.Enonce = q_.Enonce.replace('{{='+var_+'}}', str(sortie__[var_]))
+                    q_.Reponse = q_.Reponse.replace('{{='+var_+'}}', str(sortie__[var_]))
+                return({'q_': q_, 'ok_': num_question})
+    return({'q_': q_, 'ok_': num_question})
+
+@auth.requires_membership('managers')
+def show_selectcat(id_cat,nb_space,id_option_selected,id_cat_select,oncontinue):
+# permet de generer le <select></select> contenant l'arborescence des categories
+# en excluant les branches filles de id_cat_select et aussi id_cat_select (si cette valeur vaut -1 tout est affiche)
+# la fonction est recursive et appelee avec id_cat = id de Racine
+#  nb_space permet de gerer les espaces a mettre dans <option> pour simuler le niveau d'arborescence 
+# id_option_selected permet de specifier l'option qui doit avoir l'attribut selected
+# oncontinue permet de controler le niveau de recursivite
+# il prend la valeur False lorsque la categorie courante dans la boucle for vaut id_cat_select
+# ainsi on ne parcourera pas les categories filles.
+# ceci empeche de pouvoir deplacer une categorie a l'interieur d'elle meme
+    if oncontinue:
+        rows = db(db.categorie_banque.Parent_Id == id_cat).select(orderby=db.categorie_banque.Nom)
+        chaine = ""
+        for row in rows:
+            oncontinue = (row.id != id_cat_select)
+            if (row.id == id_option_selected):
+                chaine += '<option selected value="'+str(row.id)+'">'
+            elif oncontinue:
+                chaine += '<option value="'+str(row.id)+'">'
+            for j in range(nb_space*2):
+                chaine += '&nbsp;'
+            chaine+=row.Nom+"</option>\n"
+            prochain = show_selectcat(row.id,nb_space+2,id_option_selected,id_cat_select,oncontinue)
+            if prochain != -1:
+                chaine += prochain
+        return(chaine)
+    else:
+        return -1
+    
+@auth.requires_membership('managers')
+def manage_questions():
+    mygrid = SQLFORM.grid(db.quizz_banque,fields=[ db.quizz_banque.Categorie, db.quizz_banque.Titre, db.quizz_banque.Nature, db.quizz_banque.Enonce, db.quizz_banque.Points, db.quizz_banque.Langage], headers = {'quizz_banque.Enonce':'Enoncé', 'quizz_banque.Categorie':'Catégorie','quizz_banque.Nature':'Type'}, deletable=True, editable=True, showbuttontext=True,user_signature=True)
+    racine = db(db.categorie_banque.Nom == 'Racine').select()
+    if len(request.args)>0:
+        if request.args[0] == 'edit':
+            # on recupere l'id categorie de la question qui est editee
+            record = db.quizz_banque(request.args(2)) or redirect(URL('manage_questions',user_signature=True))
+            to_select = record.Categorie
+        elif request.args[0] == 'new':
+            to_select = racine[0].id
+        # on genere les options du select pour le formulaire d'edition ou de creation
+        # il faut enlever les \n sinon cela pose pb pour la fonction repalceWith de jquery
+        select_code = show_selectcat(racine[0].id,1,to_select,-1,True).replace('\n','')
+        select_code = XML('<SELECT class="form-control select" name="Categorie" id="quizz_banque_Categorie"><OPTION value="'+str(racine[0].id)+'">Racine</OPTION>'+select_code+'</SELECT>')
+#        debug = str(record)+str(to_select)
+    else:
+        # on est sur la page d'entree de manage_questions
+        # on recupere le code HTML de l'arborescence des categories
+        to_select = racine[0].id
+        select_code = show_selectcat(racine[0].id,1,to_select,-1,True).replace('\n','')
+
+            
+    return locals()
+
+@auth.requires_membership('managers')
+def manage_cat():
+    mygrid = SQLFORM.grid(db.categorie_banque, deletable=True, editable=True, showbuttontext=True,user_signature=True)
+    return locals()
+
+def manage_categories():
+    def delete_space_and_update(form,id_cat_parent):
+        form.vars.Nom = form.vars.Nom.strip()
+        existe = db((db.categorie_banque.Parent_Id == id_cat_parent) & (db.categorie_banque.Nom == form.vars.Nom)).select()
+        if len(existe)>0:
+            cat_parent = db.categorie_banque(id_cat_parent)
+            form.errors.Nom = XML(form.vars.Nom+' existe d&eacute;j&agrave; dans la cat&eacute;gorie '+cat_parent.Nom);
+                # on met a jour l'id du parent dont le nom a ete selectionne
+                # via la balise select
+        else:
+            form.vars.Parent_Id = id_cat_parent
+
+        
+    def show_listcat(id_cat):
+        rows = db(db.categorie_banque.Parent_Id == id_cat).select(orderby=db.categorie_banque.Nom)
+        chaine = ""
+        for row in rows:
+            auxchaine = row.Nom
+            auxchaine += '&nbsp;&nbsp;'+str(A(SPAN(_class="icon trash icon-trash glyphicon glyphicon-trash"), data = {'action': 'delete'} ,_href=URL("manage_categories",args=["delete",row.id],user_signature=True)))
+            auxchaine += '&nbsp;&nbsp;'+str(A(SPAN(_class="icon pen icon-pencil glyphicon glyphicon-pencil"),_href=URL("manage_categories",args=["edit",row.id],user_signature=True)))
+            chaine += str(LI(XML(auxchaine),_class='select_ok'))+'\n'
+            souschaine = show_listcat(row.id)
+            if souschaine is not None:
+                chaine += souschaine
+        if len(chaine) > 0:
+            return('<UL>\n'+XML(chaine)+'\n</UL>\n')
+        
+    racine = db(db.categorie_banque.Nom == 'Racine').select()
+    if request.args:
+        if request.args[0] == 'edit':
+            # on recupere le nom de la categorie qui est editee
+            record = db.categorie_banque(request.args(1)) or redirect(URL('manage_categories',user_signature=True))
+            # on recupere les infos sur la categorie parente
+            record_parent = db(db.categorie_banque.id == record.Parent_Id).select(db.categorie_banque.id)
+            nomcategorie = record.Nom
+            id_categorie_parent = record.Parent_Id
+            id_categorie = record.id
+            message = XML('Modification effectu&eacute;e')
+            form = SQLFORM(db.categorie_banque, record)
+        elif request.args[0] == 'new':
+            nomcategorie = ""
+            id_categorie_parent = racine[0].id
+            id_categorie = -1
+            message = XML('Ajout effectu&eacute;')
+            form = SQLFORM(db.categorie_banque)
+        elif request.args[0] == 'delete':
+            #on verifie si la categorie possede des sous-categories
+            vide = db(db.categorie_banque.Parent_Id == request.args[1]).select(db.categorie_banque.id)
+            if len(vide) > 0:
+                session.flash = XML("La cat&eacute;gorie contient des sous-cat&eacute;gories, suppression impossible");
+            else:
+                db(db.categorie_banque.id == request.args[1]).delete()
+                session.flash = XML("Cat&eacute;gorie supprim&eacute;e");                
+            redirect(URL('manage_categories',user_signature=True))
+        if request.args[0] in ['edit','new']:  
+            zeform = FORM(DIV(LABEL(db.categorie_banque.fields[1],_class='form-control-label col-sm-3'),DIV(INPUT(_name = "Nom", _value = nomcategorie, _class = "form-control string"),_class="col-sm-9"),_class='form-group row'),
+                          DIV(LABEL(XML('Cat&eacute;gorie Parente'),_class='form-control-label col-sm-3'),DIV(XML('<SELECT class="form-control select" name="select_id">\n<OPTION value="'+str(racine[0].id)+'">Racine</OPTION>'+show_selectcat(racine[0].id,1,id_categorie_parent,id_categorie,True)+'</SELECT>'),_class="col-sm-9"),_class='form-group row'), 
+                          INPUT(_type='hidden', _name='_formname', _value='editcat'),
+                          INPUT(_type='hidden', _name='Parent_Id', _value=id_categorie_parent),
+                          INPUT(_type='hidden', _name='id', _value=id_categorie),
+                          DIV(DIV(INPUT(_value="Soumettre",_class="btn btn-primary",_type='submit'),_class="col-sm-9 col-sm-offset-3"),_class="form-group row", _id="submit_record__row"),
+                          _action='#', _enctype = 'multipart/form-data',_method='post', _class='web2py_form')
+            def dsau(form,newval = request.vars.select_id):
+                delete_space_and_update(form,newval)
+            ok = form.process(session=None,formname='editcat',onvalidation=dsau,  message_onsuccess=message,message_on_failure= 'Erreurs dans le formulaire', next=URL('manage_categories',user_signature='True')).accepted
+                #record.update_record(Parent_Id = request.vars.select_id)
+                #session.flash = XML('Modification effectu&eacute;e')
+               # redirect(URL('manage_categories',user_signature='True'))
+            if form.errors:
+                if form.errors.Nom:
+                    response.flash = form.errors.Nom
+                else:
+                    response.flash = 'Erreur(s) dans le formulaire'
+            return dict(liste_cat=zeform)
+    else:
+        menu_ajout = DIV(A(SPAN(_class="icon plus icon-plus glyphicon glyphicon-plus"),SPAN("Ajouter",_class="buttontext button", _title="Add record to database"),_class="button btn btn-default btn-secondary",_href=URL("manage_categories",args=["new"],user_signature=True)),_class="web2py_console")
+        return dict(liste_cat=XML('\n'+XML(menu_ajout)+'\n<BR>\n<UL id="_liste_categories">\n<LI>'+racine[0].Nom+'</LI>\n'+show_listcat(racine[0].id)+'\n</UL><BR>\n'))
+
+    # ---- API (example) -----
+@auth.requires_login()
+def api_get_user_email():
+    if not request.env.request_method == 'GET': raise HTTP(403)
+    return response.json({'status':'success', 'email':auth.user.email})
+
+# ---- Smart Grid (example) -----
+@auth.requires_membership('managers') # can only be accessed by members of admin groupd
+def grid():
+    response.view = 'generic.html' # use a generic view
+    tablename = request.args(0)
+    if not tablename in db.tables: raise HTTP(403)
+    grid = SQLFORM.smartgrid(db[tablename], args=[tablename], deletable=False, editable=False)
+    return dict(grid=grid)
+
+
+# ---- Action for login/register/etc (required for auth) -----
+def user():
+    """
+    exposes:
+    http://..../[app]/default/user/login
+    http://..../[app]/default/user/logout
+    http://..../[app]/default/user/register
+    http://..../[app]/default/user/profile
+    http://..../[app]/default/user/retrieve_password
+    http://..../[app]/default/user/change_password
+    http://..../[app]/default/user/bulk_register
+    use @auth.requires_login()
+        @auth.requires_membership('group name')
+        @auth.requires_permission('read','table name',record_id)
+    to decorate functions that need access control
+    also notice there is http://..../[app]/appadmin/manage/auth to allow administrator to manage users
+    """
+    return dict(form=auth())
+
+# ---- action to server uploaded static content (required) ---
+@cache.action()
+def download():
+    """
+    allows downloading of uploaded files
+    http://..../[app]/default/download/[filename]
+    """
+    return response.download(request, db)

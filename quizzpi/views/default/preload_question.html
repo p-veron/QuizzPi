@@ -1,0 +1,45 @@
+<html>
+     {{include 'web2py_ajax.html'}}
+     {{ if request.args[0] == 'quizzmode':
+        # quizzmode, id_question, id_quizz, position de id_question dans la liste des questions, nb_etu
+        arg_url = request.args
+        else:
+        arg_url = ['preview',request.args[1]]
+        pass
+      }}
+    <head>
+        <style>
+        .center {
+          padding: 70px 0;
+          border: 0px solid green;
+          text-align: center;
+        }
+        </style>    
+    </head>
+<body>
+    <!-- Le quizz contient-il des questions ? -->
+    {{if int(request.args[1]) != -1:}}
+    <div class="center" id="loading" style="height:100%">        
+          {{=IMG(_src=URL("static", "images",args="ajax-loader.gif"))}}
+    </div>
+    <script>
+        $(function(){
+           $.ajax({
+                   type: "POST",
+                              url: "{{=URL('view_question',args=arg_url, user_signature=True)}}",
+                              dataType: "html",
+                              encode: true,
+                    }).done(function (data) {
+                            var newDoc = document.open("text/html", "replace");
+                            newDoc.write(data);
+                            newDoc.close();                              
+                            });
+        });     
+    </script>
+    {{else:}}
+    <div class="center" id="loading" style="height:100%;font-size:32px;font-weight:bold">        
+          Aucune question dans ce quizz !!
+    </div>    
+    {{pass}}
+</body> 
+</html>

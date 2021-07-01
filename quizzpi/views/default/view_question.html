@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js" lang="{{=T.accepted_language or 'en'}}"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <!-- www.phpied.com/conditional-comments-block-downloads/ -->
+    <!-- Always force latest IE rendering engine
+         (even in intranet) & Chrome Frame
+         Remove this if you use the .htaccess -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge{{=not request.is_local and ',chrome=1' or ''}}">
+    <!--  Mobile Viewport Fix
+          j.mp/mobileviewport & davidbcalhoun.com/2010/viewport-metatag
+          device-width: Occupy full width of the screen in its current orientation
+          initial-scale = 1.0 retains dimensions instead of zooming out if page height > device height
+          user-scalable = yes allows the user to zoom in -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aperçu question</title>
+    <!-- http://dev.w3.org/html5/markup/meta.name.html -->
+    <!-- include stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="{{=URL('static','css/bootstrap.min.css')}}"/>
+    <link rel="stylesheet" href="{{=URL('static','css/web2py-bootstrap4.css')}}"/>
+    <link rel="stylesheet" href="{{=URL('static','css/jquery-ui.min.css')}}"/>
+    <link rel="stylesheet" href="{{=URL('static','css/checkboxview.css')}}"/>
+    <link rel="stylesheet" href="{{=URL('static','css/navlink.css')}}"/>
+    <link rel="shortcut icon" href="{{=URL('static','images/favicon.ico')}}" type="image/x-icon">
+    <link rel="apple-touch-icon" href="{{=URL('static','images/favicon.png')}}">
+    <link href="{{=URL('static','css/prism.css')}}" rel="stylesheet" type="text/css" /> 
+    <!-- All JavaScript at the bottom, except for Modernizr which enables
+         HTML5 elements & feature detects -->
+    <script src="{{=URL('static','js/modernizr-2.8.3.min.js')}}"></script>
+    <!-- Favicons -->
+    {{include 'web2py_ajax.html'}} <!-- this includes jquery.js, calendar.js/.css and web2py.js -->
+    <script src="{{=URL('static', 'js/prism.js')}}" type="text/javascript" charset="utf-8"></script>   
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src={{=URL('static', 'js/mathjax/tex-chtml.js')}}>
+        MathJax = {
+                  tex: {inlineMath: [["$","$"],["\\(","\\)"]]},
+                  processEscapes: true,
+                  processEnvironments: true,
+                  showProcessingMessages: false
+                };
+    </script>      
+     <style>
+         .ui-dialog  { outline: none;}
+         .ui-button  { outline: none;}
+         .ui-widget-content {
+            outline: none;
+         }
+         .ui-button-icon-primary{top:0px;left:0px;margin:1px;}
+        .newcolor {
+            background-color: #bccad3;
+        }
+        .center {
+          margin: 0;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }   
+        .center-fig {
+          margin: auto;
+          width: 50%;
+        }
+        .row-choix {
+            vertical-align: top;
+        }
+        #tchoix{
+             border-collapse: separate;
+             border-spacing : 15px;
+        }
+        .myerror{
+            border: 1px solid;
+            margin: 10px 0px;
+            padding:15px 10px 15px 50px;
+            background-repeat: no-repeat;
+            background-position: 10px center;
+            color: #D8000C;
+            background-color: #FFBABA;
+            background-image: url('{{=URL("static","images/error.png")}}');
+        }
+      </style>
+  </head>
+  <body>
+      {{# on determine si on est en mode preview ou en mode lancement du quizz
+      activequizz = (request.args[0] == 'quizzmode')
+      try:    
+           ok_
+       except:}}
+        <div class="myerror">{{=erreur_message or ''}}</div>
+        <b>Erreur d'interprétation de la question</b>
+      {{else:
+      oncontinue = True
+      if q_.Nature == 'Multiple':
+          try:
+               import ast
+               reponse_l = ast.literal_eval(q_.Reponse)
+               rep = len(reponse_l)
+            except:
+                erreur_message = XML("Votre champ R&eacute;ponse contient un identificateur qui n'est pas une liste !")
+                oncontinue = False}}
+                <div class="myerror">{{=erreur_message or ''}}</div>
+            {{else:}}
+                {{if (rep > 8) or (rep==0):
+                  erreur_message = XML("Votre champ R&eacute;ponse doit contenir un identificateur correspondant &agrave; une liste non vide <b>d'au plus</b> 8 entiers")
+                  oncontinue = False}}
+        <div class="myerror">{{=erreur_message or ''}}</div>
+                {{else:
+                    reponse_s = set(reponse_l)
+                    if (rep != len(reponse_s)):
+                      erreur_message = XML("Votre champ R&eacute;ponse doit contenir un identificateur correspondant &agrave; une liste d'&eacute;l&eacute;ments <b>distincts</b>")
+                      oncontinue = False}}
+                   <div class="myerror">{{=erreur_message or ''}}</div>
+                    {{else:
+                     # traiter ici le cas des listes qui ne contiennent pas des entiers
+                      oncontinue = isinstance(reponse_l[0],int)
+                      j = 1
+                      while oncontinue and (j < rep):
+                           oncontinue = (isinstance(reponse_l[j],int) and (reponse_l[j] > 0) and (reponse_l[j] < 9))
+                           j = j + 1
+                      pass
+                      if not(oncontinue):
+                        erreur_message = XML("Votre champ R&eacute;ponse doit contenir un identificateur correspondant &agrave; une liste d'au plus <b>8 entiers distincts</b> compris entre <b>1 et 8</b>")
+                            }}                                            
+                      <div class="myerror">{{=erreur_message or ''}}</div>
+                      {{# fin if not(oncontinue)
+                          pass}}
+                  {{pass}}
+                {{# fin du else sur rep >8 or rep==0
+                  pass}}
+            {{# fin du try 
+              pass}}
+      {{# fin 'q_.Nature==Multiple'
+      pass
+      if oncontinue:}}
+       <nav class="navbar navbar-light navbar-expand-md bg-faded bg-dark navbar-dark justify-content-center">
+           {{if activequizz:}}
+            <p class="navbar-brand d-flexc" id="totaletu"></p>
+            <script>
+                /* script permettant de mettre a jour le nombre de reponses envoyées */
+                var timeOutId = 0;
+                var ajaxFn = function () {
+                        $.ajax({                            
+                            url: "{{=URL('checkstudent',args=['0',q_.id])}}",
+                            dataType: "html",
+                            success: function (response) {
+                                    $("#totaletu").html(response);
+                                    timeOutId = setTimeout(ajaxFn, 2000);
+                                }
+                            }
+                            );
+                }
+                timeOutId = setTimeout(ajaxFn, 1000);
+           </script>           
+           {{pass}}
+           {{if activequizz and b_prev != -1:
+           =b_prev
+           pass}}
+        <p class="navbar-brand d-flexc">
+            {{if activequizz:}}
+            <b>Question {{=num_question}}&nbsp;:&nbsp;</b>
+            {{pass}}
+            {{=q_.Titre}}  ({{=q_.Points}} {{if (float(q_.Points) > 1):}} points{{else:}} point{{pass}})
+        </p>
+           {{if activequizz and b_next != -1:
+           =b_next
+           pass}}
+      </nav>
+      {{#=MARKMIN(q_.Enonce,extra={'code_python':lambda text,lang='python': CODE(text,language=lang).xml()})}}
+      {{import re
+        pattern = r'<[ ]*script.*[^\/]*\/[ ]*script[ ]*>'  
+        #q_.Enonce = re.sub(pattern, '', q_.Enonce, flags=(re.IGNORECASE | re.MULTILINE | re.DOTALL))
+        #q_.Enonce.replace("<script>",'');
+        q_.Reponse = re.sub(pattern, '', q_.Reponse, flags=(re.IGNORECASE | re.MULTILINE | re.DOTALL))
+        =XML(q_.Enonce)}}
+      {{# variable utilisee pour stocker les id des questions pour assurer une coherence avec la zapette
+        # ne sera remplit que si on est sur une question à choix multiple
+        id_choix = []
+        if (q_.Nature == "Multiple"):
+        tempo_choix = [q_.Choix1,q_.Choix2,q_.Choix3,q_.Choix4,q_.Choix5,q_.Choix6,q_.Choix7,q_.Choix8]
+        q_choix = []
+        for cpt in range(8):
+          if tempo_choix[cpt] is not None:
+              q_choix += [(tempo_choix[cpt],'Choix'+str(cpt+1))]
+          pass
+        pass
+        nbchoix = len(q_choix)
+        if q_.Melange == "Oui":
+            import random
+            random.shuffle(q_choix)
+        pass
+        for elt in q_choix:
+            id_choix.append(elt[1])
+        pass    
+        q_choix += [(None,None)]
+      }}
+       <table id="tchoix">
+       {{ cpt = 0
+          liste_choix = []
+          while (cpt < nbchoix):
+            if ((q_choix[cpt][0] is not None)):
+                if (q_choix[cpt+1][0] is not None):
+                  if request.args[0] == 'quizzmode':
+                    liste_choix+=[TR(TD(LABEL(XML(q_choix[cpt][0]),INPUT(_type='checkbox'),SPAN(XML('&nbsp;<b>'+chr(ord('A')+cpt)+'</b>'),_class='checkmark'),_class='mon-container',_id=q_choix[cpt][1]),_class='multiple'),TD(LABEL(XML(q_choix[cpt+1][0]),INPUT(_type='checkbox'),SPAN(XML('&nbsp;<b>'+chr(ord('A')+cpt+1)+'</b>'),_class='checkmark'),_class='mon-container',_id=q_choix[cpt+1][1]),_class='multiple'),_class='row-choix')]
+                   else:
+                    liste_choix+=[TR(TD(LABEL(XML(q_choix[cpt][0]),INPUT(_type='checkbox'),SPAN(_class='checkmark'),_class='mon-container',_id=q_choix[cpt][1]),_class='multiple'),TD(LABEL(XML(q_choix[cpt+1][0]),INPUT(_type='checkbox'),SPAN(_class='checkmark'),_class='mon-container',_id=q_choix[cpt+1][1]),_class='multiple'),_class='row-choix')]        
+                   pass
+                else:
+                  if request.args[0] == 'quizzmode':
+                    liste_choix+=[TR(TD(LABEL(XML(q_choix[cpt][0]),INPUT(_type='checkbox'),SPAN(XML('&nbsp;<b>'+chr(ord('A')+cpt)+'</b>'),_class='checkmark'),_class='mon-container',_id=q_choix[cpt][1]),_class='multiple'),TD(_class='multiple'),_class='row-choix')]
+                  else:
+                    liste_choix+=[TR(TD(LABEL(XML(q_choix[cpt][0]),INPUT(_type='checkbox'),SPAN(_class='checkmark'),_class='mon-container',_id=q_choix[cpt][1]),_class='multiple'),TD(_class='multiple'),_class='row-choix')]
+                  pass                 
+               pass
+#            else:
+#               cpt = len(q_choix)
+           pass
+           cpt = cpt + 2
+           pass
+           for e in liste_choix:
+               =e
+           pass
+        }}
+       </table>
+    {{    # fin du if q_.Nature == Multiple
+    pass}}
+    {{if request.args[0] == 'quizzmode':
+        db(db.running_quizz.idquizz == request.args(2)).update(liste_choix=id_choix)
+      pass
+    }}  
+    {{block footer}} <!-- this is default footer -->
+    <input id="show_answer" class="btn btn-primary" type="button" value="Voir bonne réponse" />       
+    {{ if q_.Nature != "Multiple": }}
+      {{ if request.args[0] == 'preview':}}
+        <br><br>Votre r&eacute;ponse : <br><input type="text" id="student_answer" style="width:95%;margin:5pt;"></input><br>
+      {{pass}}
+         <div id="dialog_reponse" title="R&eacute;ponse">
+         <!-- ici ajout d'un code Tex avec la reponse ppur supprimer un bug d'affichage -->
+         <!-- qui fait que parfois une ligne en pointille apparaît sur la boite de dialogue -->
+         <!-- apparemment Mathjax "efface" cette ligne ??? -->    
+              {{=DIV(B(XML(q_.Reponse+'\(\)')),_class='center')}}
+         </div>
+    {{pass}}
+    {{ if request.args[0] == 'preview':}}       
+     <input id='verif' class="btn btn-primary" type="button" value="Vérifier réponse" />
+     <span id="result_verif"></span>  
+    {{pass}}  
+    {{# fin request.args[0] == 'preview'
+      #pass}}
+    <!-- The javascript =============================== -->
+    <script src="{{=URL('static','js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{=URL('static','js/web2py-bootstrap4.js')}}"></script>
+    <script src="{{=URL('static','js/jquery-ui.min.js')}}"></script>  
+    <script>
+       type_question = 'simple'; 
+       $(function(){
+             button_resultat_visible = false;
+             $("#verif").hide();
+             $("#dialog_reponse").hide();  
+             if ($(document).width() > 500)
+               window.resizeBy($(document).width()-$(window).width()+20, 0);               
+        });
+        $(document).ready(function()
+                 {
+                    $("#loading").hide();
+                });
+         /* Modification pour interpréter le tex stocké dans les variables */
+        /*   $(".inline-tex").after(function(){
+            latex_f = $(this).text();
+            return "\\("+latex_f+"\\)";
+        });
+        $(".center-tex").after(function(){
+            latex_f = $(this).text();
+            return "<p>\\["+latex_f+"\\]</p>";
+        }); */
+        $(".inline-python").each(function(){
+                code_source = $(this).text()
+                $(this).html('<pre class="language-python"><code>'+code_source+'</code></pre>')
+        });
+        $(".language-python").addClass("line-numbers");
+        $("#show_answer").click(function(){
+                    // on desactive le click pour eviter d'afficher plusieurs fois le bouton "Résultats"
+                    //$(this).off('click');
+                    {{bonne_reponse = '' 
+                      if q_.Nature != "Multiple": }}
+                            $("#dialog_reponse").dialog({show: { effect: "drop", direction : "down"}, hide: {
+                                    effect: "explode",
+                                    duration: 1000
+                             }});
+                    {{else:
+                      import ast}}
+                      $(".mon-container").click(function(e){e.preventDefault()});
+                      {{for good_ans in ast.literal_eval(q_.Reponse):
+                            good_ans = "Choix"+str(good_ans)
+                            bonne_reponse += ':'+good_ans}}
+                           $("#{{=good_ans}} .checkmark").css("background-color","green");
+                           {{if request.args(0) == 'preview':}}
+                           $("#{{=good_ans}} input").prop('checked','true');
+                           {{pass}}
+                      {{pass}}
+                    {{pass}}
+                    {{ if request.args[0] == 'quizzmode':
+                       #db.running_quizz.update_or_insert(db.running_quizz.id==1,answer=bonne_reponse[1:])
+                       if b_next != -1:
+                       # pour eviter que b_next ne pose de pb dans le lien en dessous
+                           b_next = 0
+                       pass}}
+                    if (!button_resultat_visible)
+                    {
+                        $(this).after('&nbsp;&nbsp;<input id="show_result" class="btn btn-primary" type="button" value="Résultats" />');
+                        button_resultat_visible = true;
+                    }
+                    $("#show_result").click(function(e){
+                        /* on arrête la requête ajax pour obtenir l enombre de réponses */
+                         clearTimeout(timeOutId);
+                         window.open("{{=URL('preload_resultat',args=[num_question,b_next, q_.id])}}", 'Resultats', 'scrollbars=1,resizable=1,width=800,height='+Math.floor(window.screen.availHeight*0.9)); 
+                     });
+
+                    {{pass}}
+         });
+         {{ if request.args[0] == 'preview':}}       
+         $("input[type='checkbox']").click(function(e){
+             // on desactive l'ecoute du click pour
+             //eviter que verif.show s'execute a chque click sur une checkbox
+             // seul le premier click doit faire apparaitre le bouton "verfifier"
+                $("input[type='checkbox']").off("click");
+                $("#verif").show();
+                type_question='multiple'  
+          });  
+            $("#student_answer").focus(function(e){
+                $("#verif").show();
+            });
+            $("#verif").click(function (e){
+                {{ if q_.Nature == 'Multiple':}}
+                    reponse_donne = new Array();
+                    $("input[type='checkbox']:checked").each(function(){
+                          reponse_donne.push(parseInt($(this).parent().attr('id').replace("Choix","")));
+                    });
+                    reponse_donne.sort();
+                    reponse_donne = '['+reponse_donne.join()+']';
+                {{else:}}
+                     reponse_donne = $("#student_answer").val().trim()
+                     if (reponse_donne == "")
+                         return;
+                     else
+                         reponse_donne = encodeURI(reponse_donne)
+                {{pass}}
+                $("#result_verif").html("");
+                var formData = {
+                  lareponse: reponse_donne
+                };
+                $.ajax({
+                          type: "POST",
+                          url: "{{=URL('verif_reponse',args=['preview'])}}/"+type_question+'/'+{{=q_.id}},
+                          data: formData,
+                          dataType: "html",
+                          encode: true,
+                          beforeSend: function () {$('#result_verif').html('{{=IMG(_src=URL("static", "images",args="gify4.gif"))}}');}
+                }).done(function (data) {
+                              $("#result_verif").html(data);
+                        });
+           });
+        /* fin de if request.arg[0] == preview */
+        {{pass}}
+    </script>
+    {{# fin de oncontinue
+      pass
+      # fin du try sur ok_
+      pass
+     }} 
+  </body>
+</html>
