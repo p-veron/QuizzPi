@@ -39,12 +39,6 @@
          font-size:20px;
     }
 </style>
-<script>
-history.pushState(null, null, $(location).attr('href'));
-window.addEventListener('popstate', function () {
-    history.pushState(null, null, $(location).attr('href'));
-});
-</script>
   <body>
        <nav class="navbar navbar-light navbar-expand-md bg-faded bg-dark navbar-dark justify-content-center">
         <p class="navbar-brand d-flexc">

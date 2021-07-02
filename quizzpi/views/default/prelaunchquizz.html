@@ -35,14 +35,13 @@
         {{if vide == True:}}
         <div class='text-center'>
         <span id="totaletu">Ce quizz ne comporte aucune question !!</span>
-        <div>
+        </div>
         {{else:}}
         <div class='text-center'>
         <span id="totaletu"></span>
         <br>    
-        <img src="{{=URL('static','images/student.png')}}">
+        <img src="{{=URL('static','images/student.png')}}"><span id="showqr"></span>
         {{=form_start}}     
-        {{=ip}}
         </div>
     </div>
     <script>
@@ -61,6 +60,16 @@
                 }
                 timeOutId = setTimeout(ajaxFn, 1000);
                 $("form").submit(function(){clearTimeout(timeOutId);});
+                $.ajax({
+                          type: "POST",
+                          url: "{{=URL('makeqrcode')}}",
+                          dataType: "html",
+                          encode: true,
+                          beforeSend: function () {$('#showqr').html('{{=IMG(_src=URL("static", "images",args="loading.gif"),_width=370)}}');}
+                }).done(function (data) {
+                              $('#showqr').html('{{=IMG(_src=URL("static", "images/qrcode.png"),_width=370)}}');
+                        });
+        
    </script>
    {{pass}}         
 </body>

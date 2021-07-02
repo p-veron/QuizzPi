@@ -695,6 +695,21 @@ def manage_categories():
         menu_ajout = DIV(A(SPAN(_class="icon plus icon-plus glyphicon glyphicon-plus"),SPAN("Ajouter",_class="buttontext button", _title="Add record to database"),_class="button btn btn-default btn-secondary",_href=URL("manage_categories",args=[request.args(0),"new"],vars=dict(_init='1'),user_signature=True)),_class="web2py_console")
         return dict(liste_cat=XML('\n'+XML(menu_ajout)+'\n<BR>\n<UL id="_liste_categories">\n<LI>'+racine[0].Nom+'&nbsp;('+str(nb_objets_racine)+')</LI>\n'+show_listcat(racine[0].id)+'\n</UL><BR>\n'))
 
+
+@auth.requires(auth.has_membership(group_id='superuser') or auth.has_membership(group_id='managers'))     
+def makeqrcode():
+    import socket, qrcode
+        
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8",80))
+    ip = s.getsockname()[0]
+    qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_L,box_size=10,border=4)
+    qr.add_data('https://'+ip+'/quizzpi/runquizz')
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    img.save("/home/www-data/web2py/applications/quizzpi/static/images/qrcode.png")
+    return locals()
+    
 @auth.requires(auth.has_membership(group_id='superuser') or auth.has_membership(group_id='managers'))     
 def prelaunchquizz():
     # TODO : on pourrait faire un merge de prelaunchquizz et launchquizz
@@ -706,10 +721,6 @@ def prelaunchquizz():
     first_question = liste_q[0]
     vide=False
     if first_question != -1 :
-        import socket
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8",80))
-        ip = s.getsockname()[0]
         form_start = FORM(INPUT(_id='envoi',_type='submit',_class ='button btn btn-default btn-primary',_value='Commencer'),
                               hidden=dict(nbtotaletu='-1'))
         if form_start.process().accepted:

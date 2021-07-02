@@ -79,7 +79,7 @@ def zapette():
         contenu = CAT(contenu,BR(),DIV(INPUT(_id="envoi",_type='button',_class ='button btn btn-default btn-primary',value='Envoyer'),_class='text-center'))    
         position = position + 1
     else:
-        contenu = DIV(IMG(_src=URL("static", "images",args="patience.gif"),_width='95%'),P(B(XML("Patience ..., attendez que la prochaine question soit affich&eacute;e"),_class="patience")),_class="text-center")
+        contenu = DIV(IMG(_src=URL("static", "images",args="patience.gif"),_width='95%'),P(B(XML("Patience ..., r&eacute; attendez que la prochaine question soit affich&eacute;e"),_class="patience")),_class="text-center")
         type_q = 'nothing'
     if position < nb_questions:
         next_button = P(A(SPAN(_class="icon fa fa-arrow-circle-right fa-lg"),_href=URL('zapette',args=[request.args[0],request.args[1],liste_q[position]]),_id='next_button'),_class='navbar-brand') 
