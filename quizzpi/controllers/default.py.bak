@@ -541,7 +541,7 @@ def manage():
             to_select = racine[0].id
             # ici on active l'option selectable pour avoir simplement automatiquement les cases a cocher
             # mais la gestion se fait dans la view
-            mygrid = SQLFORM.grid(db.quizz_banque,args=[request.args(0),request.args(1),request.args(2)],fields=[db.quizz_banque.Titre, db.quizz_banque.Nature, db.quizz_banque.Enonce, db.quizz_banque.Langage, db.quizz_banque.modified_on], headers = {'quizz_banque.Enonce':'Enoncé','quizz_banque.Nature':'Type'}, deletable=False, duplicatable=False, editable=False, showbuttontext=False,orderby=db.quizz_banque.modified_on,exportclasses=dict(xml=False,html=False,json=False,tsv=False,tsv_with_hidden_cols=False,csv=False,csv_with_hidden_cols=False),selectable = [('Ajouter',lambda ids : none_func(ids))], user_signature=True)
+            mygrid = SQLFORM.grid(db.quizz_banque,args=[request.args(0),request.args(1),request.args(2)],fields=[db.quizz_banque.Titre, db.quizz_banque.Nature, db.quizz_banque.Enonce, db.quizz_banque.Langage, db.quizz_banque.modified_on], headers = {'quizz_banque.Enonce':'Enoncé','quizz_banque.Nature':'Type'}, deletable=False, duplicatable=False, editable=False, showbuttontext=False,orderby=db.quizz_banque.modified_on,exportclasses=dict(xml=False,html=False,json=False,tsv=False,tsv_with_hidden_cols=False,csv=False,csv_with_hidden_cols=False),selectable = [('Ajouter',lambda ids : none_func(ids))], user_signature=True,maxtextlength=65)
             my_extra_element = INPUT(_type='hidden', _name='liste_id_to_add',  _value='-1')
             mygrid[1][0].append(my_extra_element)   
             form_add = FORM(INPUT(_type='submit', _id="add_to_quizz", _class="button btn btn-default btn-secondary", _value=XML("Ajouter")), hidden=dict(liste_q_to_add='-1'),_name='form_add')
@@ -706,6 +706,10 @@ def prelaunchquizz():
     first_question = liste_q[0]
     vide=False
     if first_question != -1 :
+        import socket
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect("8.8.8.8",80)
+        ip = s.getsockname()[0]
         form_start = FORM(INPUT(_id='envoi',_type='submit',_class ='button btn btn-default btn-primary',_value='Commencer'),
                               hidden=dict(nbtotaletu='-1'))
         if form_start.process().accepted:

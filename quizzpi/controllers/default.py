@@ -706,6 +706,10 @@ def prelaunchquizz():
     first_question = liste_q[0]
     vide=False
     if first_question != -1 :
+        import socket
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8",80))
+        ip = s.getsockname()[0]
         form_start = FORM(INPUT(_id='envoi',_type='submit',_class ='button btn btn-default btn-primary',_value='Commencer'),
                               hidden=dict(nbtotaletu='-1'))
         if form_start.process().accepted:

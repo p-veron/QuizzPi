@@ -145,6 +145,7 @@
           </div>
         </div>
       </div>
+        <B>{{=str(response.menu)}}</B>
     </footer>
     {{end}}
     <!-- The javascript =============================== -->

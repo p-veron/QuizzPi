@@ -6439,3 +6439,7 @@
 [2021-07-01 18:28:52] EDIT quizzpi/models/menu.py: 1
 [2021-07-01 18:30:13] EDIT quizzpi/models/menu.py: 0
 [2021-07-01 18:34:56] EDIT quizzpi/models/menu.py: -1
+[2021-07-02 08:48:42] EDIT quizzpi/views/layout.html: -10
+[2021-07-02 10:34:35] EDIT quizzpi/controllers/default.py: 4
+[2021-07-02 10:35:32] EDIT quizzpi/views/default/prelaunchquizz.html: 1
+[2021-07-02 10:36:15] EDIT quizzpi/controllers/default.py: 0

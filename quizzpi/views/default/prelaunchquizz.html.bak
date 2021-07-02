@@ -41,8 +41,7 @@
         <span id="totaletu"></span>
         <br>    
         <img src="{{=URL('static','images/student.png')}}">
-        {{=form_start}}     
-        {{=ip}}
+        {{=form_start}}            
         </div>
     </div>
     <script>
