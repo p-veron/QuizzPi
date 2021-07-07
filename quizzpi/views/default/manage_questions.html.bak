@@ -179,6 +179,9 @@ $("tr.with_id").each(function(){
         $("#_show_enonce").css("top",position.top);
         $("#_show_enonce").css("left",position.left);        
         $("#_show_enonce").load("/quizzpi/default/view_enonce/"+$(this).parent().attr('id'));
+        texte = $("#_show_enonce").text();
+        alert(texte);
+        MathJax.typeset([$("#_show_enonce")[0]]);
         $("#_show_enonce").show();
     });
 });
@@ -361,6 +364,6 @@ pass
  de l'affichage de la banque de questions */
 $("a[title='Aperçu']").click(function() {
     link = $(this).attr("href");
-    window.open(link, 'Popup', 'scrollbars=1,resizable=1,width=700,height='+Math.floor(window.screen.availHeight*0.8)); 
+    window.open(link, 'MyPopup', 'scrollbars=1,resizable=1,width=700,height='+Math.floor(window.screen.availHeight*0.8)); 
     return false;});
 </script>
