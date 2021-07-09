@@ -94,45 +94,49 @@ de votre script de vérification:</strong><br>
 
 
 def verif_reponse():
+# fonction utiliser uniquement dans le mode preview
+# TODO faire un merge avec ec qui est fait en mode quizzmode
     ok = False
     mess = ""
     if request.args[1] == 'multiple':
-        if request.args[0] == 'preview':
-            # le if etait prevu pour la gestion quizzmode
-            # mais la gestion est finalement effectuée oar une autre fonction
-            # TODO : mettre à jour
-            lareponse = ast.literal_eval(request.vars.lareponse)
-            labonnereponse = db((db.gen_question.QuestionId == request.args[2]) & (db.gen_question.user_id == auth.user.id)).select(db.gen_question.Reponse_calcule)
-            labonnereponse = ast.literal_eval(labonnereponse[0].Reponse_calcule)
-            labonnereponse.sort()
-            ok = (lareponse == labonnereponse)
+        lareponse = ast.literal_eval(request.vars.lareponse)
+        labonnereponse = db((db.gen_question.QuestionId == request.args[2]) & (db.gen_question.user_id == auth.user.id)).select(db.gen_question.Reponse_calcule)
+        labonnereponse = ast.literal_eval(labonnereponse[0].Reponse_calcule)
+        labonnereponse.sort()
+        ok = (lareponse == labonnereponse)
+        if request.args[0] == 'get':
+            return labonnereponse
     else:
-        if request.args[0] == 'preview':
-            champs = db((db.gen_question.QuestionId == request.args[2]) & (db.gen_question.user_id == auth.user.id)).select(db.gen_question.QuestionId,db.gen_question.Langage,db.gen_question.Verification,db.gen_question.Reponse_calcule)
-            if champs[0].Verification is None:
-                #labonnereponse = db(db.gen_question.QuestionId == request.args[2]).select(db.gen_question.Reponse_calcule)
-                labonnereponse = champs[0].Reponse_calcule
-                lareponse = unquote(request.vars.lareponse)
-                ok = (lareponse == labonnereponse)
+        # on est sur une question simple
+        champs = db((db.gen_question.QuestionId == request.args[2]) & (db.gen_question.user_id == auth.user.id)).select(db.gen_question.QuestionId,db.gen_question.Langage,db.gen_question.Verification,db.gen_question.Reponse_calcule)
+        if request.args[0] == 'get':
+            return champs[0].Reponse_calcule
+        if champs[0].Verification is None:
+            #labonnereponse = db(db.gen_question.QuestionId == request.args[2]).select(db.gen_question.Reponse_calcule)
+            labonnereponse = champs[0].Reponse_calcule
+            lareponse = unquote(request.vars.lareponse)
+            ok = (lareponse == labonnereponse)
+        else:
+            if request.args[0] == 'get':
+                return "A vous de le faire !"
+            ok2,mess = execute_script_verif(unquote(request.vars.lareponse),champs[0].QuestionId,champs[0].Langage,champs[0].Verification)
+            if mess == "":
+                # le script s'est execute
+                # soit il a renvoye True car resultat correct
+                # soit il a renvoye False car resultat incorrect
+                # soit il a renvoye False + message car syntaxe de la reponse incorrect
+                ok = (ok2 == 'True')
+                if not(ok) and str(ok2[5:])!="":                        
+                   mess = '<div class="myerror">'+str(ok2[5:])+'</div>' 
             else:
-                ok2,mess = execute_script_verif(unquote(request.vars.lareponse),champs[0].QuestionId,champs[0].Langage,champs[0].Verification)
-                if mess == "":
-                    # le script s'est execute
-                    # soit il a renvoye True car resultat correct
-                    # soit il a renvoye False car resultat incorrect
-                    # soit il a renvoye False + message car syntaxe de la reponse incorrect
-                    ok = (ok2 == 'True')
-                    if not(ok) and str(ok2[5:])!="":                        
-                        mess = '<div class="myerror">'+str(ok2[5:])+'</div>' 
-                else:
-                    ok = False
-                    mess = '<div class="myerror">'+mess+'</div>'
+                ok = False
+                mess = '<div class="myerror">'+mess+'</div>'
     #return("<b>"+ok2+"</b>&nbsp;<b>"+mess+"</b>")                
     if ok:    
-#        return ("<BR><SPAN style='color:green;'>Bonne r&eacute;ponse !</span>  "+lareponse+" "+labonnereponse)
+        return ("<BR><SPAN style='color:green;'>Bonne r&eacute;ponse !</span>  "+str(lareponse)+" "+str(labonnereponse))
         return ("<SPAN style='color:green;'>&nbsp;Bonne r&eacute;ponse !</span>")
     else:
-#        return("<BR><SPAN style='color:red;'>Mauvaise r&eacute;ponse !</span>  "+lareponse+" "+labonnereponse)
+        return("<BR><SPAN style='color:red;'>Mauvaise r&eacute;ponse !</span>  "+str(lareponse)+" "+str(labonnereponse))
         return("<SPAN style='color:red;'>&nbsp;Mauvaise r&eacute;ponse !</span><BR>"+mess)
     
 def view_enonce():
@@ -485,9 +489,9 @@ def manage():
     nb_questions_in_racine = db(banque.Categorie == racine[0].id).count()
     banque.modified_on.readable = True
     if tablename == 'quizz_banque':
-        mygrid = SQLFORM.grid(db.quizz_banque,args=[request.args(0)],fields=[db.quizz_banque.Titre, db.quizz_banque.Nature, db.quizz_banque.Enonce, db.quizz_banque.Langage, db.quizz_banque.modified_on], headers = {'quizz_banque.Enonce':'Enoncé','quizz_banque.Nature':'Type'}, deletable=True, duplicatable=True, editable=True, showbuttontext=False,selectable = [('Déplacer vers >>',lambda ids : move_item(ids)),('Supprimer',lambda ids : delete_item(ids))],exportclasses=dict(xml=False,html=False,tsv=False,tsv_with_hidden_cols=False,csv=False,csv_with_hidden_cols=False),orderby=db.quizz_banque.modified_on,user_signature=True,onvalidation=check_reponse,onfailure=save_categorie,maxtextlength=65)
+        mygrid = SQLFORM.grid(db.quizz_banque,args=[request.args(0)],fields=[db.quizz_banque.Titre, db.quizz_banque.Nature, db.quizz_banque.Enonce, db.quizz_banque.Langage, db.quizz_banque.modified_on], headers = {'quizz_banque.Enonce':'Enoncé','quizz_banque.Nature':'Type'}, deletable=True, duplicatable=True, editable=True, showbuttontext=False,selectable = [('Déplacer vers >>',lambda ids : move_item(ids)),('Supprimer',lambda ids : delete_item(ids))],exportclasses=dict(xml=False,html=False,tsv=False,tsv_with_hidden_cols=False,csv=False,csv_with_hidden_cols=False),orderby=db.quizz_banque.modified_on,user_signature=True,onvalidation=check_reponse,onfailure=save_categorie,maxtextlength=65, client_side_delete=True)
     else:
-        mygrid = SQLFORM.grid(db.quizz_quizz,args=[request.args(0)], fields=[db.quizz_quizz.Titre], deletable=True, duplicatable=True, editable=True, searchable=True, showbuttontext=False,selectable = [('Déplacer vers >>',lambda ids : move_item(ids)),('Supprimer',lambda ids : delete_item(ids))],exportclasses=dict(xml=False,html=False,tsv=False,tsv_with_hidden_cols=False,csv=False,csv_with_hidden_cols=False),orderby=db.quizz_quizz.modified_on,onvalidation=save_or_update,onfailure=save_categorie,user_signature=True,maxtextlength=40)
+        mygrid = SQLFORM.grid(db.quizz_quizz,args=[request.args(0)], fields=[db.quizz_quizz.Titre], deletable=True, duplicatable=True, editable=True, searchable=True, showbuttontext=False,selectable = [('Déplacer vers >>',lambda ids : move_item(ids)),('Supprimer',lambda ids : delete_item(ids))],exportclasses=dict(xml=False,html=False,tsv=False,tsv_with_hidden_cols=False,csv=False,csv_with_hidden_cols=False),orderby=db.quizz_quizz.modified_on,onvalidation=save_or_update,onfailure=save_categorie,user_signature=True,maxtextlength=40,client_side_delete=True)
         # dans le cas ou on affiche le quizz il faut rajouter un formulaire permettant de selectionner
         # les questions que l'on souhaite enlever du formulaire
         # on passera la liste des id dans un champ cache intitul'e liste_q_to_del

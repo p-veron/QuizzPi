@@ -94,45 +94,49 @@ de votre script de vérification:</strong><br>
 
 
 def verif_reponse():
+# fonction utiliser uniquement dans le mode preview
+# TODO faire un merge avec ec qui est fait en mode quizzmode
     ok = False
     mess = ""
     if request.args[1] == 'multiple':
-        if request.args[0] == 'preview':
-            # le if etait prevu pour la gestion quizzmode
-            # mais la gestion est finalement effectuée oar une autre fonction
-            # TODO : mettre à jour
-            lareponse = ast.literal_eval(request.vars.lareponse)
-            labonnereponse = db((db.gen_question.QuestionId == request.args[2]) & (db.gen_question.user_id == auth.user.id)).select(db.gen_question.Reponse_calcule)
-            labonnereponse = ast.literal_eval(labonnereponse[0].Reponse_calcule)
-            labonnereponse.sort()
-            ok = (lareponse == labonnereponse)
+        lareponse = ast.literal_eval(request.vars.lareponse)
+        labonnereponse = db((db.gen_question.QuestionId == request.args[2]) & (db.gen_question.user_id == auth.user.id)).select(db.gen_question.Reponse_calcule)
+        labonnereponse = ast.literal_eval(labonnereponse[0].Reponse_calcule)
+        labonnereponse.sort()
+        ok = (lareponse == labonnereponse)
+        if request.args[0] == 'get':
+            return labonnereponse
     else:
-        if request.args[0] == 'preview':
-            champs = db((db.gen_question.QuestionId == request.args[2]) & (db.gen_question.user_id == auth.user.id)).select(db.gen_question.QuestionId,db.gen_question.Langage,db.gen_question.Verification,db.gen_question.Reponse_calcule)
-            if champs[0].Verification is None:
-                #labonnereponse = db(db.gen_question.QuestionId == request.args[2]).select(db.gen_question.Reponse_calcule)
-                labonnereponse = champs[0].Reponse_calcule
-                lareponse = unquote(request.vars.lareponse)
-                ok = (lareponse == labonnereponse)
+        # on est sur une question simple
+        champs = db((db.gen_question.QuestionId == request.args[2]) & (db.gen_question.user_id == auth.user.id)).select(db.gen_question.QuestionId,db.gen_question.Langage,db.gen_question.Verification,db.gen_question.Reponse_calcule)
+        if request.args[0] == 'get':
+            return champs[0].Reponse_calcule
+        if champs[0].Verification is None:
+            #labonnereponse = db(db.gen_question.QuestionId == request.args[2]).select(db.gen_question.Reponse_calcule)
+            labonnereponse = champs[0].Reponse_calcule
+            lareponse = unquote(request.vars.lareponse)
+            ok = (lareponse == labonnereponse)
+        else:
+            if request.args[0] == 'get':
+                return "A vous de le faire !"
+            ok2,mess = execute_script_verif(unquote(request.vars.lareponse),champs[0].QuestionId,champs[0].Langage,champs[0].Verification)
+            if mess == "":
+                # le script s'est execute
+                # soit il a renvoye True car resultat correct
+                # soit il a renvoye False car resultat incorrect
+                # soit il a renvoye False + message car syntaxe de la reponse incorrect
+                ok = (ok2 == 'True')
+                if not(ok) and str(ok2[5:])!="":                        
+                   mess = '<div class="myerror">'+str(ok2[5:])+'</div>' 
             else:
-                ok2,mess = execute_script_verif(unquote(request.vars.lareponse),champs[0].QuestionId,champs[0].Langage,champs[0].Verification)
-                if mess == "":
-                    # le script s'est execute
-                    # soit il a renvoye True car resultat correct
-                    # soit il a renvoye False car resultat incorrect
-                    # soit il a renvoye False + message car syntaxe de la reponse incorrect
-                    ok = (ok2 == 'True')
-                    if not(ok) and str(ok2[5:])!="":                        
-                        mess = '<div class="myerror">'+str(ok2[5:])+'</div>' 
-                else:
-                    ok = False
-                    mess = '<div class="myerror">'+mess+'</div>'
+                ok = False
+                mess = '<div class="myerror">'+mess+'</div>'
     #return("<b>"+ok2+"</b>&nbsp;<b>"+mess+"</b>")                
     if ok:    
-#        return ("<BR><SPAN style='color:green;'>Bonne r&eacute;ponse !</span>  "+lareponse+" "+labonnereponse)
+#        return ("<BR><SPAN style='color:green;'>Bonne r&eacute;ponse !</span>  "+str(lareponse)+" "+str(labonnereponse))
         return ("<SPAN style='color:green;'>&nbsp;Bonne r&eacute;ponse !</span>")
     else:
-#        return("<BR><SPAN style='color:red;'>Mauvaise r&eacute;ponse !</span>  "+lareponse+" "+labonnereponse)
+#        return("<BR><SPAN style='color:red;'>Mauvaise r&eacute;ponse !</span>  "+str(lareponse)+" "+str(labonnereponse))
         return("<SPAN style='color:red;'>&nbsp;Mauvaise r&eacute;ponse !</span><BR>"+mess)
     
 def view_enonce():
