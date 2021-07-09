@@ -485,9 +485,9 @@ def manage():
     nb_questions_in_racine = db(banque.Categorie == racine[0].id).count()
     banque.modified_on.readable = True
     if tablename == 'quizz_banque':
-        mygrid = SQLFORM.grid(db.quizz_banque,args=[request.args(0)],fields=[db.quizz_banque.Titre, db.quizz_banque.Nature, db.quizz_banque.Enonce, db.quizz_banque.Langage, db.quizz_banque.modified_on], headers = {'quizz_banque.Enonce':'Enoncé','quizz_banque.Nature':'Type'}, deletable=True, duplicatable=True, editable=True, showbuttontext=False,selectable = [('Déplacer vers >>',lambda ids : move_item(ids)),('Supprimer',lambda ids : delete_item(ids))],exportclasses=dict(xml=False,html=False,tsv=False,tsv_with_hidden_cols=False,csv=False,csv_with_hidden_cols=False),orderby=db.quizz_banque.modified_on,user_signature=True,onvalidation=check_reponse,onfailure=save_categorie,maxtextlength=65)
+        mygrid = SQLFORM.grid(db.quizz_banque,args=[request.args(0)],fields=[db.quizz_banque.Titre, db.quizz_banque.Nature, db.quizz_banque.Enonce, db.quizz_banque.Langage, db.quizz_banque.modified_on], headers = {'quizz_banque.Enonce':'Enoncé','quizz_banque.Nature':'Type'}, deletable=True, duplicatable=True, editable=True, showbuttontext=False,selectable = [('Déplacer vers >>',lambda ids : move_item(ids)),('Supprimer',lambda ids : delete_item(ids))],exportclasses=dict(xml=False,html=False,tsv=False,tsv_with_hidden_cols=False,csv=False,csv_with_hidden_cols=False),orderby=db.quizz_banque.modified_on,user_signature=True,onvalidation=check_reponse,onfailure=save_categorie,maxtextlength=65, client_side_delete=True)
     else:
-        mygrid = SQLFORM.grid(db.quizz_quizz,args=[request.args(0)], fields=[db.quizz_quizz.Titre], deletable=True, duplicatable=True, editable=True, searchable=True, showbuttontext=False,selectable = [('Déplacer vers >>',lambda ids : move_item(ids)),('Supprimer',lambda ids : delete_item(ids))],exportclasses=dict(xml=False,html=False,tsv=False,tsv_with_hidden_cols=False,csv=False,csv_with_hidden_cols=False),orderby=db.quizz_quizz.modified_on,onvalidation=save_or_update,onfailure=save_categorie,user_signature=True,maxtextlength=40)
+        mygrid = SQLFORM.grid(db.quizz_quizz,args=[request.args(0)], fields=[db.quizz_quizz.Titre], deletable=True, duplicatable=True, editable=True, searchable=True, showbuttontext=False,selectable = [('Déplacer vers >>',lambda ids : move_item(ids)),('Supprimer',lambda ids : delete_item(ids))],exportclasses=dict(xml=False,html=False,tsv=False,tsv_with_hidden_cols=False,csv=False,csv_with_hidden_cols=False),orderby=db.quizz_quizz.modified_on,onvalidation=save_or_update,onfailure=save_categorie,user_signature=True,maxtextlength=40,client_side_delete=True)
         # dans le cas ou on affiche le quizz il faut rajouter un formulaire permettant de selectionner
         # les questions que l'on souhaite enlever du formulaire
         # on passera la liste des id dans un champ cache intitul'e liste_q_to_del
@@ -754,8 +754,15 @@ def launchquizz():
     
 @auth.requires(auth.has_membership(group_id='superuser') or auth.has_membership(group_id='managers')) 
 def students():
+    def delete_item(liste_id):
+        for id in liste_id:
+            db(db.etudiants.id == id).delete()
+        session.flash = str(len(liste_id))+XML(" étudiants(s) supprimé(s)")
+    
     #TODO modifier la base et utiliser le mécanisme de login de web2py
-    student_grid = SQLFORM.grid(db.etudiants, deletable=True, editable=True, duplicatable=False, showbuttontext=False, exportclasses=dict(xml=False,html=False,json=False,tsv=False,tsv_with_hidden_cols=False,csv=False,csv_with_hidden_cols=False), user_signature=True)
+    student_grid = SQLFORM.grid(db.etudiants, fields=[db.etudiants.Nom, db.etudiants.Prenom, db.etudiants.Courriel,db.etudiants.Filiere,db.etudiants.logged], deletable=True, editable=True, duplicatable=False, showbuttontext=False,selectable = [('Supprimer',lambda ids : delete_item(ids))], exportclasses=dict(xml=False,html=False,json=False,tsv=False,tsv_with_hidden_cols=False,csv=False,csv_with_hidden_cols=False), client_side_delete=True, user_signature=True)
+    #my_extra_element = INPUT(_type='hidden', _name='liste_st_to_del',  _value='-1')
+    #student[1][0].append(my_extra_element)   
     formcsv = FORM(XML('Cliquer sur <B>Parcourir</B> pour importer un fichier CSV '),BR(),BR(),
                        INPUT(_type='file', _name='csvfile'),
                        INPUT(_type='hidden', _value='db.etudiants', _name='table'),BR(),BR(),

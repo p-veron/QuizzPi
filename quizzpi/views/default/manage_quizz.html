@@ -10,7 +10,7 @@ import re
 pass
 # lignes de debug
 #=BR()
-#=B(str(request.vars))
+#=B(str(request.args))
 # quelque soit le cas on affiche mygrid
 =mygrid
 if len(request.args) == 1: 
@@ -283,8 +283,12 @@ if len(request.args)>1:
       pass
       pattern = r'<[ ]*script.*?\/[ ]*script[ ]*>'  
       question.Enonce = re.sub(pattern, '', question.Enonce, flags=(re.IGNORECASE | re.MULTILINE | re.DOTALL))
-      question.Enonce = question.Enonce.replace("\\\\","\\")
-      =TR(TD(INPUT(_name="myrecords",_type="checkbox")),TD(question.Titre),TD(XML(question.Enonce)),TD(A(SPAN(_class="icon magnifier icon-zoom-in glyphicon glyphicon-zoom-in"),_href=URL('manage',args=['quizz_banque','view','quizz_banque',question.id],user_signature=True),_title="Aperçu",_class="button btn btn-default btn-secondary"),_class="row_buttons", _nowrap="nowrap"),_class=classe_parite[cpt]+ "ui-state-default",_id=question.id, data={'show':0})
+      # on supprime les balises TeX pour l'affichage de l'énoncé dans la liste principale car cela cause des bug avec MathJax pour les var qui commencent par __
+      question.Enonce = question.Enonce.replace('\\(','')
+      question.Enonce = question.Enonce.replace('\\)','')
+      question.Enonce = question.Enonce.replace('\\[','')
+      question.Enonce = question.Enonce.replace('\\]','')
+      =TR(TD(INPUT(_name="myrecords",_type="checkbox")),TD(question.Titre),TD(question.Enonce),TD(A(SPAN(_class="icon magnifier icon-zoom-in glyphicon glyphicon-zoom-in"),_href=URL('manage',args=['quizz_banque','view','quizz_banque',question.id],user_signature=True),_title="Aperçu",_class="button btn btn-default btn-secondary"),_class="row_buttons", _nowrap="nowrap"),_class=classe_parite[cpt]+ "ui-state-default",_id=question.id, data={'show':0})
       cpt = 1 - cpt
       pass
     }}
@@ -306,7 +310,8 @@ if len(request.args)>1:
     $("tr.with_id").each(function(){
         enonce = $(this).find("td").eq(2);
         /* pour aficher le texte html interprété on le parse */
-        toshow = $.parseHTML(enonce.text())[0].wholeText
+         toshow = $.parseHTML(enonce.text())[0].innerHTML
+         enonce.html(toshow);
         enonce.click(function(e){
             if ($("#_show_enonce").is(":hidden"))
                 $(this).parent().attr('data-show',0);

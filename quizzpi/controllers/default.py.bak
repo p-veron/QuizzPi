@@ -704,7 +704,7 @@ def makeqrcode():
     s.connect(("8.8.8.8",80))
     ip = s.getsockname()[0]
     qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_L,box_size=10,border=4)
-    qr.add_data('https://'+ip+'quizzpi/runquizz')
+    qr.add_data('https://'+ip+'/quizzpi/runquizz')
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white")
     img.save("/home/www-data/web2py/applications/quizzpi/static/images/qrcode.png")
@@ -754,8 +754,15 @@ def launchquizz():
     
 @auth.requires(auth.has_membership(group_id='superuser') or auth.has_membership(group_id='managers')) 
 def students():
+    def delete_item(liste_id):
+        for id in liste_id:
+            db(db.etudiants.id == id).delete()
+        session.flash = str(len(liste_id))+XML(" étudiants(s) supprimé(s)")
+    
     #TODO modifier la base et utiliser le mécanisme de login de web2py
-    student_grid = SQLFORM.grid(db.etudiants, deletable=True, editable=True, duplicatable=False, showbuttontext=False, exportclasses=dict(xml=False,html=False,json=False,tsv=False,tsv_with_hidden_cols=False,csv=False,csv_with_hidden_cols=False), user_signature=True)
+    student_grid = SQLFORM.grid(db.etudiants, fields=[db.etudiants.Nom, db.etudiants.Prenom, db.etudiants.Courriel,db.etudiants.Filiere,db.etudiants.logged], deletable=True, editable=True, duplicatable=False, showbuttontext=False,selectable = [('Supprimer',lambda ids : delete_item(ids))], exportclasses=dict(xml=False,html=False,json=False,tsv=False,tsv_with_hidden_cols=False,csv=False,csv_with_hidden_cols=False), client_side_delete=True, user_signature=True)
+    #my_extra_element = INPUT(_type='hidden', _name='liste_st_to_del',  _value='-1')
+    #student[1][0].append(my_extra_element)   
     formcsv = FORM(XML('Cliquer sur <B>Parcourir</B> pour importer un fichier CSV '),BR(),BR(),
                        INPUT(_type='file', _name='csvfile'),
                        INPUT(_type='hidden', _value='db.etudiants', _name='table'),BR(),BR(),
