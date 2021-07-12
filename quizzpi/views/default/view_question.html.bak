@@ -356,7 +356,6 @@
                     });
                     reponse_donne.sort();
                     reponse_donne = '['+reponse_donne.join()+']';
-                    alert(reponse_donne);
                 {{else:}}
                      reponse_donne = $("#student_answer").val().trim()
                      if (reponse_donne == "")

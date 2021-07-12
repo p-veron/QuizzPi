@@ -283,7 +283,7 @@ if len(request.args)>1:
       pass
       pattern = r'<[ ]*script.*?\/[ ]*script[ ]*>'  
       question.Enonce = re.sub(pattern, '', question.Enonce, flags=(re.IGNORECASE | re.MULTILINE | re.DOTALL))
-      # on supprime les balises TeX pour l'affichage car cela cause des bug avec MathJax pour les var qui commencent par __
+      # on supprime les balises TeX pour l'affichage de l'énoncé dans la liste principale car cela cause des bug avec MathJax pour les var qui commencent par __
       question.Enonce = question.Enonce.replace('\\(','')
       question.Enonce = question.Enonce.replace('\\)','')
       question.Enonce = question.Enonce.replace('\\[','')
@@ -408,8 +408,9 @@ $("a[title='Lancer']").click(function(e) {
     idquizz = idquizz.split('?')[0] ;
     link = "{{=URL('prelaunchquizz',args=['idquizz'],user_signature=True)}}";
     link = link.replace('idquizz',idquizz);
-    window.open(link, 'PopupSlide', 'scrollbars=1,resizable=1,width=900,height='+Math.floor(window.screen.availHeight*0.8)); 
-    return false;});
+    //window.open(link, 'PopupSlide', 'scrollbars=1,resizable=1,width=900,height='+Math.floor(window.screen.availHeight*0.8)); 
+    window.open(link, 'PopupSlide', 'scrollbars=1,resizable=1,width='+Math.floor(window.screen.width*0.99)+',height=window.screen.height'); 
+   return false;});
  /* action a effectuer pour le bouton Apercu permettant de voir le contenu de l'une des questions du quizz*/
 $("a[title='Aperçu']").click(function() {
     link = $(this).attr("href");
