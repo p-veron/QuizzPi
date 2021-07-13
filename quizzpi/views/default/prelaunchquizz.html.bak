@@ -45,7 +45,7 @@
         {{=form_start}}     
         </div>
     </div>
-      <button onclick="openFullscreen();">Open Fullscreen</button>
+     <!-- <button onclick="openFullscreen();">Open Fullscreen</button> -->
     <script>
                 var timeOutId = 0;
                 var ajaxFn = function () {
@@ -71,9 +71,12 @@
                 }).done(function (data) {
                               $('#showqr').html('{{=IMG(_src=URL("static", "images/qrcode.png"),_width=370)}}');
                         });
-    var elem = document.documentElement;
-  if (elem.requestFullscreen) 
-    elem.requestFullscreen();   
-   </script>
+ /*   var elem = document.documentElement;
+      function openFullscreen() {
+      if (elem.requestFullscreen) 
+        elem.requestFullscreen(); 
+    }
+    */
+     </script>
    {{pass}}         
 </body>

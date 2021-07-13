@@ -16,6 +16,7 @@
     <script>
         offset = Math.floor((window.screen.width-800)/2);
         window.moveTo(offset,0);
+
         $(function(){
            // request.args(0) = num_question , c'est la position de la question dans le quizz , ce n'est pas l'id de la question
             // request.args(1) , flag pour savoir si on est sur le derniere question (auquel cas il vaut -1, sinon 0)

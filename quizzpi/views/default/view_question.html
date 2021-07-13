@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="{{=URL('static','css/jquery-ui.min.css')}}"/>
     <link rel="stylesheet" href="{{=URL('static','css/checkboxview.css')}}"/>
     <link rel="stylesheet" href="{{=URL('static','css/navlink.css')}}"/>
+    <link rel="stylesheet" href="{{=URL('static','css/fontscreen.css')}}"/>      
     <link rel="shortcut icon" href="{{=URL('static','images/favicon.ico')}}" type="image/x-icon">
     <link rel="apple-touch-icon" href="{{=URL('static','images/favicon.png')}}">
     <link href="{{=URL('static','css/prism.css')}}" rel="stylesheet" type="text/css" /> 
@@ -42,11 +43,19 @@
                 };
     </script>      
      <style>
-        * { font-size:26px;}
          .ui-dialog  { outline: none;}
+         .ui-dialog-titlebar {color:black;background-color:green;font-weight:bold; font-size:26px;}
+         .ui-dialog-title {font-size:26px;}
          .ui-button  { outline: none;}
          .ui-widget-content {
             outline: none;
+            font-size:26px;
+         }
+         .ui-widget-content .center b{
+             font-size:26px;
+         }
+         .ui-dialog-content .center b{
+             font-size:26px;
          }
          .ui-button-icon-primary{top:0px;left:0px;margin:1px;}
         .newcolor {
@@ -258,9 +267,14 @@
        $(function(){
              button_resultat_visible = false;
              $("#verif").hide();
-             $("#dialog_reponse").hide();  
+             $("#dialog_reponse").hide();
+           {{ if request.args[0] == 'preview':}}
              if ($(document).width() > 500)
-               window.resizeBy($(document).width()-$(window).width()+20, 0);               
+               window.resizeBy($(document).width()-$(window).width()+20, 0);
+           {{else:}}
+               window.resizeTo(window.screen.width,window.screen.height);
+               window.moveTo(0,0);
+           {{pass}}
         });
         $(document).ready(function()
                  {
@@ -285,7 +299,8 @@
                     //$(this).off('click');
                     {{bonne_reponse = '' 
                       if q_.Nature != "Multiple": }}
-                            $("#dialog_reponse").dialog({show: { effect: "drop", direction : "down"}, hide: {
+                            $("#dialog_reponse").dialog({ height: 400, width: 400,
+show: { effect: "drop", direction : "down"}, hide: {
                                     effect: "explode",
                                     duration: 1000
                              }});

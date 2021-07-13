@@ -361,7 +361,7 @@ pass
  de l'affichage de la banque de questions */
 $("a[title='Aperçu']").click(function() {
     link = $(this).attr("href");
-//    window.open(link, 'MyPopup', 'scrollbars=1,resizable=1,width=700,height='+Math.floor(window.screen.availHeight*0.8)); 
-    window.open(link, 'MyPopup', 'scrollbars=1,resizable=1,width=window.screen.width,height=window.screen.height'); 
+    window.open(link, 'MyPopup', 'scrollbars=1,resizable=1,width=700,height='+Math.floor(window.screen.availHeight*0.8)); 
+//    window.open(link, 'MyPopup', 'scrollbars=1,resizable=1,width=window.screen.width,height=window.screen.height'); 
     return false;});
 </script>

@@ -408,9 +408,9 @@ $("a[title='Lancer']").click(function(e) {
     idquizz = idquizz.split('?')[0] ;
     link = "{{=URL('prelaunchquizz',args=['idquizz'],user_signature=True)}}";
     link = link.replace('idquizz',idquizz);
-    alert(Math.floor(window.screen.width*0.99));
     //window.open(link, 'PopupSlide', 'scrollbars=1,resizable=1,width=900,height='+Math.floor(window.screen.availHeight*0.8)); 
-    window.open(link, 'PopupSlide', 'scrollbars=1,resizable=1,width='+Math.floor(window.screen.width*0.99)+',height=window.screen.height'); 
+    wquizz = window.open(link, 'PopupSlide', 'scrollbars=1,resizable=1,width='+Math.floor(window.screen.width*0.99)+',height=window.screen.height'); 
+    wquizz.moveTo(0,0);
    return false;});
  /* action a effectuer pour le bouton Apercu permettant de voir le contenu de l'une des questions du quizz*/
 $("a[title='Aperçu']").click(function() {
