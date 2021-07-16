@@ -207,8 +207,10 @@ if len(request.args)>1:
     /* on place en fin de page les boutons Apercu et Sauvegarder */     
     $("input[type='submit']").before(view,'<input class="btn btn-primary" type="submit" value="Sauvegarder" />');
     /* gestion pour le click sur "Sauvegarder" *
-    /* val = 1 ==> on est sur la page de creation d'un quizz */
-    /* val = 2 ==> on est sur la page d'edition d'un quizz */
+    /* val = 1 ==> on est sur la page de creation d'un quizz et on clique sur Sauver*/
+    /* val = 2 ==> on est sur la page d'edition d'un quizz et on clique sur Sauver */
+    /* val = 3 ==> on est sur la page de creation d'un quizz et on clique sur Sauver et Quitter*/
+    /* val = 4 ==> on est sur la page d'edition d'un quizz et on clique sur Sauver  et Quitter*/
     /* ceci permet de gerer l'execution de la fonction check_validation dans default.py */    
     $("input[value='Sauvegarder']").click(function(e){
         {{if (request.args[1] == 'new'):}}
@@ -218,7 +220,11 @@ if len(request.args)>1:
         {{pass}}
     });
     $("input[value='Sauvegarder et Quitter']").click(function(e){
-        $("input[name='justsave']").val("3");
+        {{if (request.args[1] == 'new'):}}
+             $("input[name='justsave']").val("3");
+        {{else:}}
+             $("input[name='justsave']").val("4");
+        {{pass}}
     });
 </script>
 {{if request.args[1] == "edit":}}

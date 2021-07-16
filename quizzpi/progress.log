@@ -6687,3 +6687,13 @@
 [2021-07-13 12:04:25] EDIT quizzpi/views/default/view_question.html: -1
 [2021-07-13 12:04:54] EDIT quizzpi/views/default/view_question.html: 1
 [2021-07-13 12:05:21] EDIT quizzpi/views/default/view_question.html: 0
+[2021-07-16 09:29:01] EDIT quizzpi/views/default/students.html: 0
+[2021-07-16 09:34:23] EDIT quizzpi/controllers/default.py: 6
+[2021-07-16 09:35:25] EDIT quizzpi/controllers/default.py: 0
+[2021-07-16 09:44:18] EDIT quizzpi/views/default/manage_quizz.html: 4
+[2021-07-16 09:44:28] EDIT quizzpi/views/default/manage_quizz.html: 0
+[2021-07-16 09:45:30] EDIT quizzpi/views/default/manage_quizz.html: 2
+[2021-07-16 09:47:41] EDIT quizzpi/controllers/default.py: 0
+[2021-07-16 09:51:17] EDIT quizzpi/controllers/default.py: 7
+[2021-07-16 09:59:58] EDIT quizzpi/views/default/manage_questions.html: 8
+[2021-07-16 10:00:32] EDIT quizzpi/views/default/manage_questions.html: -3

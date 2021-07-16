@@ -3,7 +3,7 @@
 {{=student_grid}}
 <br><br>
 {{=formcsv}}
-{{=B(str(request.args))}}
+{{#=B(str(request.args))}}
 <script>
     // si on est en mode creation, on cache la case à cocher permettant de specifier le statut "logged"
     {{ if len(request.args) > 1:}}

@@ -133,10 +133,10 @@ def verif_reponse():
                 mess = '<div class="myerror">'+mess+'</div>'
     #return("<b>"+ok2+"</b>&nbsp;<b>"+mess+"</b>")                
     if ok:    
-        return ("<BR><SPAN style='color:green;'>Bonne r&eacute;ponse !</span>  "+str(lareponse)+" "+str(labonnereponse))
+#        return ("<BR><SPAN style='color:green;'>Bonne r&eacute;ponse !</span>  "+str(lareponse)+" "+str(labonnereponse))
         return ("<SPAN style='color:green;'>&nbsp;Bonne r&eacute;ponse !</span>")
     else:
-        return("<BR><SPAN style='color:red;'>Mauvaise r&eacute;ponse !</span>  "+str(lareponse)+" "+str(labonnereponse))
+#        return("<BR><SPAN style='color:red;'>Mauvaise r&eacute;ponse !</span>  "+str(lareponse)+" "+str(labonnereponse))
         return("<SPAN style='color:red;'>&nbsp;Mauvaise r&eacute;ponse !</span><BR>"+mess)
     
 def view_enonce():
@@ -355,12 +355,18 @@ def manage():
         cat_to_go = liste_id[-1]
         for id in liste_id[:-1]:
             db(banque.id == id).update(Categorie=cat_to_go)
-        session.flash = str(len(liste_id)-1)+XML(" question(s) déplacée(s)")
+        if banque_name == 'quizz_quizz':
+            session.flash = str(len(liste_id)-1)+XML(" quizz(es) déplacé(s)")
+        else:
+            session.flash = str(len(liste_id)-1)+XML(" question(s) déplacée(s)")
 
     def delete_item(liste_id):
         for id in liste_id:
             db(banque.id == id).delete()
-        session.flash = str(len(liste_id))+XML(" question(s) effacée(s)")
+        if banque_name == 'quizz_quizz':
+            session.flash = str(len(liste_id))+XML(" quizz(es) effacée(s)")
+        else:
+            session.flash = str(len(liste_id))+XML(" question(s) effacée(s)")
 
     def save_categorie(form):
         # ici on recupere la derniere categorie selectionnee en cas d'erreur dans le formulaire
@@ -379,7 +385,7 @@ def manage():
             form.vars.Questions = liste_id_quizz
         # ici on regarde si c'est la premiere sauvegarde d'une nouvelle question
         # auquel cas on cree l'entree dans la BD (form.process()) puis on passe en mode edition
-        if (request.vars.justsave == '1'):
+        if (request.vars.justsave == '1' or request.vars.justsave == '3'):
             form.vars.id = banque.insert(**dict(form.vars))
             session.flash = XML("Sauvegarde effectuée")
             redirect(URL('manage', args = [request.args[0],'edit',banque_name, form.vars.id] , user_signature=True))

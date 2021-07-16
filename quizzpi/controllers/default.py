@@ -355,12 +355,18 @@ def manage():
         cat_to_go = liste_id[-1]
         for id in liste_id[:-1]:
             db(banque.id == id).update(Categorie=cat_to_go)
-        session.flash = str(len(liste_id)-1)+XML(" question(s) déplacée(s)")
+        if banque_name == 'quizz_quizz':
+            session.flash = str(len(liste_id)-1)+XML(" quizz(es) déplacé(s)")
+        else:
+            session.flash = str(len(liste_id)-1)+XML(" question(s) déplacée(s)")
 
     def delete_item(liste_id):
         for id in liste_id:
             db(banque.id == id).delete()
-        session.flash = str(len(liste_id))+XML(" question(s) effacée(s)")
+        if banque_name == 'quizz_quizz':
+            session.flash = str(len(liste_id))+XML(" quizz(es) effacée(s)")
+        else:
+            session.flash = str(len(liste_id))+XML(" question(s) effacée(s)")
 
     def save_categorie(form):
         # ici on recupere la derniere categorie selectionnee en cas d'erreur dans le formulaire
@@ -379,18 +385,25 @@ def manage():
             form.vars.Questions = liste_id_quizz
         # ici on regarde si c'est la premiere sauvegarde d'une nouvelle question
         # auquel cas on cree l'entree dans la BD (form.process()) puis on passe en mode edition
-        if (request.vars.justsave == '1'):
+        # ou on quitte le formulaire selon ce que l'utilisateur a choisi
+        if (request.vars.justsave == '1' or request.vars.justsave == '3'):
             form.vars.id = banque.insert(**dict(form.vars))
             session.flash = XML("Sauvegarde effectuée")
-            redirect(URL('manage', args = [request.args[0],'edit',banque_name, form.vars.id] , user_signature=True))
+            if request.vars.justsave == '1':
+                redirect(URL('manage', args = [request.args[0],'edit',banque_name, form.vars.id] , user_signature=True))
+            else:
+                if 'keywords' in request.vars:
+                    redirect(URL('manage', args = [request.args[0]], vars=dict(keywords=request.vars.keywords) , user_signature=True,  hash_vars=False))
+                else:
+                    redirect(URL('manage', args = [request.args[0]], user_signature=True))
         # sinon si c'est une sauvegarde alors que l'on etait en mode edition on fait une mise a jour de la db
         # et on active une erreur invisible, ce qui evite la soumission du formulaire
-        else:
+        elif (request.vars.justsave =='2' or request.vars.justsave =='4'):
             form.record.update_record(**dict(form.vars))
             form.errors.justsave = "Sauvegarde OK"
             response.flash = XML("Sauvegarde effectuée")
-            # si justsave vaut3 on veut quitter la page
-            if (request.vars.justsave == '3'):
+            # si justsave vaut4 on veut quitter la page
+            if (request.vars.justsave == '4'):
                 session.flash = XML("Sauvegarde effectuée")
                 # on regarde si une categorie n'a pas ete selectionnee
                 # auquel cas il faut revenir avec cette selection active

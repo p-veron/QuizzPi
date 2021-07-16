@@ -218,7 +218,11 @@ if len(request.args)>1:
         {{pass}}
     });
     $("input[value='Sauvegarder et Quitter']").click(function(e){
-        $("input[name='justsave']").val("3");
+        {{if (request.args[1] == 'new'):}}
+             $("input[name='justsave']").val("3");
+        {{else:}}
+             $("input[name='justsave']").val("4");
+        {{pass}}
     });
 </script>
 {{if request.args[1] == "edit":}}
@@ -408,7 +412,6 @@ $("a[title='Lancer']").click(function(e) {
     idquizz = idquizz.split('?')[0] ;
     link = "{{=URL('prelaunchquizz',args=['idquizz'],user_signature=True)}}";
     link = link.replace('idquizz',idquizz);
-    alert(Math.floor(window.screen.width*0.99));
     //window.open(link, 'PopupSlide', 'scrollbars=1,resizable=1,width=900,height='+Math.floor(window.screen.availHeight*0.8)); 
     wquizz = window.open(link, 'PopupSlide', 'scrollbars=1,resizable=1,width='+Math.floor(window.screen.width*0.99)+',height=window.screen.height'); 
     wquizz.moveTo(0,0);
