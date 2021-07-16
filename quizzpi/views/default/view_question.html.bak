@@ -155,6 +155,7 @@
                             dataType: "html",
                             success: function (response) {
                                     $("#totaletu").html(response);
+                                    $("#totaletubas").html(response);
                                     timeOutId = setTimeout(ajaxFn, 2000);
                                 }
                             }
@@ -299,7 +300,7 @@
                     //$(this).off('click');
                     {{bonne_reponse = '' 
                       if q_.Nature != "Multiple": }}
-                            $("#dialog_reponse").dialog({ height: 500, width: 200,
+                            $("#dialog_reponse").dialog({ height: 400, width: 400,
 show: { effect: "drop", direction : "down"}, hide: {
                                     effect: "explode",
                                     duration: 1000
@@ -319,8 +320,10 @@ show: { effect: "drop", direction : "down"}, hide: {
                     {{ if request.args[0] == 'quizzmode':
                        #db.running_quizz.update_or_insert(db.running_quizz.id==1,answer=bonne_reponse[1:])
                        if b_next != -1:
-                       # pour eviter que b_next ne pose de pb dans le lien en dessous
-                           b_next = 0
+                       # pour eviter que b_next ne pose de pb dans le lien en dessous car s'il est different de -1, il contient du code html
+                           arg_next = 0
+                       else:
+                           arg_next = -1
                        pass}}
                     if (!button_resultat_visible)
                     {
@@ -330,7 +333,7 @@ show: { effect: "drop", direction : "down"}, hide: {
                     $("#show_result").click(function(e){
                         /* on arrête la requête ajax pour obtenir l enombre de réponses */
                          clearTimeout(timeOutId);
-                         window.open("{{=URL('preload_resultat',args=[num_question,b_next, q_.id])}}", 'Resultats', 'scrollbars=1,resizable=1,width=800,height='+Math.floor(window.screen.availHeight*0.9)); 
+                         window.open("{{=URL('preload_resultat',args=[num_question,arg_next, q_.id])}}", 'Resultats', 'scrollbars=1,resizable=1,width=800,height='+Math.floor(window.screen.availHeight*0.9)); 
                      });
 
                     {{pass}}
@@ -402,5 +405,25 @@ show: { effect: "drop", direction : "down"}, hide: {
       # fin du try sur ok_
       pass
      }} 
+    {{if active_quizz:}}
+    <footer class="footer">
+       <nav class="navbar navbar-light navbar-expand-md bg-faded bg-dark navbar-dark justify-content-center">
+                       <p class="navbar-brand d-flexc" id="totaletubas"></p>
+           {{if activequizz and b_prev != -1:
+           =b_prev
+           pass}}
+        <p class="navbar-brand d-flexc">
+            {{if activequizz:}}
+            <b>Question {{=num_question}}&nbsp;:&nbsp;</b>
+            {{pass}}
+            {{=q_.Titre}}  ({{=q_.Points}} {{if (float(q_.Points) > 1):}} points{{else:}} point{{pass}})
+        </p>
+           {{if activequizz and b_next != -1:
+           =b_next
+           pass}}
+           
+        </nav>
+    </footer>     
+   {{pass}}
   </body>
 </html>
