@@ -4,6 +4,10 @@
   {
     font-size:26px;
   }
+  .nav-link, .navbar-brand
+    {
+     font-size:25px;
+    }
 }
 @media (min-width : 1301px) and (max-width : 1700px)
 {
