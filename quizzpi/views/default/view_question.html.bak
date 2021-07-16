@@ -23,7 +23,9 @@
     <link rel="stylesheet" href="{{=URL('static','css/jquery-ui.min.css')}}"/>
     <link rel="stylesheet" href="{{=URL('static','css/checkboxview.css')}}"/>
     <link rel="stylesheet" href="{{=URL('static','css/navlink.css')}}"/>
-    <link rel="stylesheet" href="{{=URL('static','css/fontscreen.css')}}"/>      
+    {{if request.args[0] == 'quizzmode':}}
+    <link rel="stylesheet" href="{{=URL('static','css/fontscreen.css')}}"/>   
+    {{pass}}
     <link rel="shortcut icon" href="{{=URL('static','images/favicon.ico')}}" type="image/x-icon">
     <link rel="apple-touch-icon" href="{{=URL('static','images/favicon.png')}}">
     <link href="{{=URL('static','css/prism.css')}}" rel="stylesheet" type="text/css" /> 
@@ -405,7 +407,7 @@ show: { effect: "drop", direction : "down"}, hide: {
       # fin du try sur ok_
       pass
      }} 
-    {{if active_quizz:}}
+    {{if activequizz:}}
     <footer class="footer">
        <nav class="navbar navbar-light navbar-expand-md bg-faded bg-dark navbar-dark justify-content-center">
                        <p class="navbar-brand d-flexc" id="totaletubas"></p>
