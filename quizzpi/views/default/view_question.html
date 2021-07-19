@@ -216,13 +216,13 @@
             if ((q_choix[cpt][0] is not None)):
                 if (q_choix[cpt+1][0] is not None):
                   if request.args[0] == 'quizzmode':
-                    liste_choix+=[TR(TD(LABEL(XML(q_choix[cpt][0]),INPUT(_type='checkbox'),SPAN(XML('&nbsp;<b>'+chr(ord('A')+cpt)+'</b>'),_class='checkmark'),_class='mon-container',_id=q_choix[cpt][1]),_class='multiple'),TD(LABEL(XML(q_choix[cpt+1][0]),INPUT(_type='checkbox'),SPAN(XML('&nbsp;<b>'+chr(ord('A')+cpt+1)+'</b>'),_class='checkmark'),_class='mon-container',_id=q_choix[cpt+1][1]),_class='multiple'),_class='row-choix')]
+                    liste_choix+=[TR(TD(LABEL(XML('&nbsp;'+q_choix[cpt][0]),INPUT(_type='checkbox'),SPAN(XML('&nbsp;<b>'+chr(ord('A')+cpt)+'</b>'),_class='checkmark'),_class='mon-container',_id=q_choix[cpt][1]),_class='multiple'),TD(LABEL(XML('&nbsp;'+q_choix[cpt+1][0]),INPUT(_type='checkbox'),SPAN(XML('&nbsp;<b>'+chr(ord('A')+cpt+1)+'</b>'),_class='checkmark'),_class='mon-container',_id=q_choix[cpt+1][1]),_class='multiple'),_class='row-choix')]
                    else:
                     liste_choix+=[TR(TD(LABEL(XML(q_choix[cpt][0]),INPUT(_type='checkbox'),SPAN(_class='checkmark'),_class='mon-container',_id=q_choix[cpt][1]),_class='multiple'),TD(LABEL(XML(q_choix[cpt+1][0]),INPUT(_type='checkbox'),SPAN(_class='checkmark'),_class='mon-container',_id=q_choix[cpt+1][1]),_class='multiple'),_class='row-choix')]        
                    pass
                 else:
                   if request.args[0] == 'quizzmode':
-                    liste_choix+=[TR(TD(LABEL(XML(q_choix[cpt][0]),INPUT(_type='checkbox'),SPAN(XML('&nbsp;<b>'+chr(ord('A')+cpt)+'</b>'),_class='checkmark'),_class='mon-container',_id=q_choix[cpt][1]),_class='multiple'),TD(_class='multiple'),_class='row-choix')]
+                    liste_choix+=[TR(TD(LABEL(XML('&nbsp;'+q_choix[cpt][0]),INPUT(_type='checkbox'),SPAN(XML('&nbsp;&<b>'+chr(ord('A')+cpt)+'</b>'),_class='checkmark'),_class='mon-container',_id=q_choix[cpt][1]),_class='multiple'),TD(_class='multiple'),_class='row-choix')]
                   else:
                     liste_choix+=[TR(TD(LABEL(XML(q_choix[cpt][0]),INPUT(_type='checkbox'),SPAN(_class='checkmark'),_class='mon-container',_id=q_choix[cpt][1]),_class='multiple'),TD(_class='multiple'),_class='row-choix')]
                   pass                 
@@ -277,7 +277,7 @@
              if ($(document).width() > 500)
                window.resizeBy($(document).width()-$(window).width()+20, 0);
            {{else:}}
-               window.resizeTo(window.screen.width,window.screen.height);
+               window.resizeTo(window.screen.width,Math.floor(window.screen.availHeight)*0.95);
                window.moveTo(0,0);
            {{pass}}
         });
@@ -335,7 +335,7 @@ show: { effect: "drop", direction : "down"}, hide: {
                         button_resultat_visible = true;
                     }
                     $("#show_result").click(function(e){
-                        /* on arrête la requête ajax pour obtenir l enombre de réponses */
+                        /* on arrête la requête ajax pour obtenir le nombre de réponses */
                          clearTimeout(timeOutId);
                          window.open("{{=URL('preload_resultat',args=[num_question,arg_next, q_.id])}}", 'Resultats', 'scrollbars=1,resizable=1,width=800,height='+Math.floor(window.screen.availHeight*0.9)); 
                      });

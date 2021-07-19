@@ -25,11 +25,11 @@ def execute_script_verif(rep_etud,qid,Langage,script_verif):
         interprete_python = "/usr/bin/python3"
         interprete_sage = "/opt/SageMath/local/bin/python3"
         if (Langage == "Python"):
-            run_time_limit = 3 # secondes
+            run_time_limit = 5 # secondes
             interprete = interprete_python
         else:
             interprete = interprete_sage
-            run_time_limit = 5 # secondes            
+            run_time_limit = 7 # secondes            
         if interprete == interprete_sage:
             script = "/tmp/verif_question_"+str(qid)+"_"+str(pid)+".sage.py"
         else:
@@ -196,7 +196,7 @@ def view_question():
         interprete_sage = "/opt/SageMath/local/bin/python3"
         if (q_.Langage == "Python"):
             interprete = interprete_python
-            run_time_limit = 3 # secondes
+            run_time_limit = 5 # secondes
         else:
             interprete = interprete_sage
             run_time_limit = 7 # secondes
