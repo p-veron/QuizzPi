@@ -5,6 +5,6 @@ L'objectif de ce projet et de proposer un environnement autonome s'exécutant su
 
 
 ## Installation sur un Raspberry 4
-<img src="img/accueil.png">
+<img src="img/00_accueil.png">
 
 ## 
