@@ -1,7 +1,10 @@
 ##### Table des matières
 [QuizzPi](#QuizzPi)
+
 [Installation sur un Raspberry 4](#Install)
+
 [Connexion à l'interface de gestion](#Connexion)
+
 <a name="QuizzPi"></a>
 ## QuizzPi
 
@@ -12,7 +15,7 @@ L'objectif de ce projet et de proposer un environnement autonome s'exécutant su
 Les questions peuvent intégrées des données aléatoires générées à partir d'un script Python. De même la vérification de la réponse peut être effectué à partir d'un script Python.
 
 <a name="Install"></a>
-## Install
+## Installation sur un Raspberry 4
 
 <a name="Connexion"></a>
 ## Connexion à l'interface de gestion
