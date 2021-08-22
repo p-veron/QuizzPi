@@ -4,6 +4,7 @@
 - [Connexion à l'interface de gestion](#Connexion)
 - [Menu de l'interface de gestion](#Menus)
   - [Catégorie-Questions](#Catégorie-Questions)
+  - [Banque de questions](#Banque)
 
 <a name="QuizzPi"></a>
 
@@ -55,3 +56,11 @@ Ce menu permet de créer des catégories afin d'y classer les questions. Pour ch
 L'ajout d'une catégorie via  le bouton **+Ajouter** consiste à spécifier le nom de la nouvelle catégorie et à sélectionner sa catégorie parente.
 
 <img src="img/04_creation_cat.PNG">
+
+<a name="Banque"></a>
+
+### Banque de questions
+
+C'est à partir de ce menu que l'on peut lister les questions disponibles, ajouter de nouvelles questions, modifier les questions existantes ou en supprimer certaines.
+
+<img src="img/05_accueil_banque_questions.PNG">
