@@ -16,6 +16,11 @@ L'objectif de ce projet et de proposer un environnement autonome s'exécutant su
 
 Les questions peuvent intégrées des données aléatoires générées à partir d'un script Python. De même la vérification de la réponse peut être effectué à partir d'un script Python.
 
+QuizzPi autorise la gestion de 2 types de question :
+
+- simple : la réponse est une chaîne de caractères saisie par l'utilisateur,
+- multiple : la réponse est choisie en cliquant parmi un ensemble de réponses proposées.
+
 <a name="Install"></a>
 
 ## Installation sur un Raspberry 4
@@ -64,3 +69,12 @@ L'ajout d'une catégorie via  le bouton **+Ajouter** consiste à spécifier le n
 C'est à partir de ce menu que l'on peut lister les questions disponibles, ajouter de nouvelles questions, modifier les questions existantes ou en supprimer certaines.
 
 <img src="img/05_accueil_banque_questions.PNG">
+
+L'option *Choisir une catégorie* permet de n'afficher que les questions de la catégorie sélectionnée. 
+
+La zone de saisie pour la *sélection de filtres* permet de faire une recherche de certaines questions en spécifiant des critères de sélection.
+
+En cliquant sur l'énoncé d'une question, on a un aperçu rapide de son contenu (à ce niveau là pas d'interprétation des graphiques s'il y en a , et pas d'interprétation des variables aléatoires).
+
+<img src="img/06_apercu_intitule_question.PNG">
+
