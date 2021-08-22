@@ -1,5 +1,8 @@
-[TOC]
-
+##### Table des matières
+[QuizzPi](#QuizzPi)
+[Installation sur un Raspberry 4](#Install)
+[Connexion à l'interface de gestion](#Connexion)
+<a name="QuizzPi"/>
 # QuizzPi
 
 Environnement de développement de quizz interactifs sur Raspberry
@@ -8,9 +11,11 @@ L'objectif de ce projet et de proposer un environnement autonome s'exécutant su
 
 Les questions peuvent intégrées des données aléatoires générées à partir d'un script Python. De même la vérification de la réponse peut être effectué à partir d'un script Python.
 
+<a name="Install"/>
 ## Installation sur un Raspberry 4
 
-## Connexion à l'interface
+<a name="Connexion"/>
+## Connexion à l'interface de gestion
 
 Pour se connecter à l'interface de QuizzPi, il suffit de lancer un navigateur et de saisir l'adresse :
 
