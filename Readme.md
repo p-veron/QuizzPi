@@ -74,7 +74,10 @@ L'option *Choisir une catégorie* permet de n'afficher que les questions de la c
 
 La zone de saisie pour la *sélection de filtres* permet de faire une recherche de certaines questions en spécifiant des critères de sélection.
 
-En cliquant sur l'énoncé d'une question, on a un aperçu rapide de son contenu (à ce niveau là pas d'interprétation des graphiques s'il y en a , et pas d'interprétation des variables aléatoires).
+En cliquant sur l'énoncé d'une question, on a un aperçu rapide de son contenu (à ce niveau là pas d'interprétation des graphiques s'il y en a, et pas d'interprétation des variables aléatoires).
 
 <img src="img/06_apercu_intitule_question.PNG">
 
+
+
+Pour chaque question affichée, un ensemble d'action est possible via la barre d'icones <img src="img/07_menu_banque_questions.PNG" height="50%">
