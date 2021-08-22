@@ -34,3 +34,5 @@ Via le menu **"Se Connecter"**, l'enseignant entre son login et son mot de passe
 Une fois identifié, il accède à l'interface de gestion 
 
 <img src="img/02_dashboard.PNG">
+
+### Catégorie-Questions
