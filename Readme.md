@@ -3,7 +3,7 @@
 [Installation sur un Raspberry 4](#Install)
 [Connexion à l'interface de gestion](#Connexion)
 <a name="QuizzPi"/>
-# QuizzPi
+## QuizzPi
 
 Environnement de développement de quizz interactifs sur Raspberry
 
