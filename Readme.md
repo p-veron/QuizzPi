@@ -48,3 +48,10 @@ Une fois identifié, il accède à l'interface de gestion
 
 ### Catégorie-Questions
 
+Ce menu permet de créer des catégories afin d'y classer les questions. Pour chaque catégorie créée, le nombre de questions présentes dans cette dernière est indiqué entre parenthèses.
+
+<img src="img/03_accueil_cat.PNG">
+
+L'ajout d'une catégorie via  le bouton **+Ajouter** consiste à spécifier le nom de la nouvelle catégorie et à sélectionner sa catégorie parente.
+
+<img src="img/04_creation_cat.PNG">
