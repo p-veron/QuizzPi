@@ -1,9 +1,12 @@
 ##### Table des matières
-[QuizzPi](#QuizzPi)<br>
-[Installation sur un Raspberry 4](#Install)<br>
-[Connexion à l'interface de gestion](#Connexion)<br>
+- [QuizzPi](#QuizzPi)<br>
+- [Installation sur un Raspberry 4](#Install)
+- [Connexion à l'interface de gestion](#Connexion)
+- [Menu de l'interface de gestion](#Menus)
+  - [Catégorie-Questions](#Catégorie-Questions)
 
 <a name="QuizzPi"></a>
+
 ## QuizzPi
 
 Environnement de développement de quizz interactifs sur Raspberry
@@ -13,6 +16,7 @@ L'objectif de ce projet et de proposer un environnement autonome s'exécutant su
 Les questions peuvent intégrées des données aléatoires générées à partir d'un script Python. De même la vérification de la réponse peut être effectué à partir d'un script Python.
 
 <a name="Install"></a>
+
 ## Installation sur un Raspberry 4
 
 <a name="Connexion"></a>
@@ -35,3 +39,12 @@ Via le menu **"Se Connecter"**, l'enseignant entre son login et son mot de passe
 Une fois identifié, il accède à l'interface de gestion 
 
 <img src="img/02_dashboard.PNG">
+
+<a name="Menus"></a>
+
+## Menus de l'interface de gestion
+
+<a name="Categorie-Questions"></a>
+
+### Catégorie-Questions
+
