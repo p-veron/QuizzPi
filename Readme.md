@@ -1,8 +1,6 @@
 ##### Table des matières
 [QuizzPi](#QuizzPi)
-
 [Installation sur un Raspberry 4](#Install)
-
 [Connexion à l'interface de gestion](#Connexion)
 
 <a name="QuizzPi"></a>
