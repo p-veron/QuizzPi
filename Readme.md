@@ -98,7 +98,7 @@ Les actions disponibles sont (de gauche à droite):
 
   <a name="Editer"></a>
 
-- **Editer une question** : en cliquant sur le crayon, on accède à l'interface permettant d'éditer les différents paramètres d'une question (voir le paragraphe [Création d'une question](#Creation)).
+- **Editer une question** : en cliquant sur le crayon, on accède à l'interface permettant d'éditer les différents paramètres d'une question (voir le paragraphe [Ajouter une question](#AjoutQuestion)).
   <a name="Dupliquer"></a>
 
 - **Dupliquer une question** : en cliquant sur l'icone représentant deux rectangles superposés, on créé une copie de la question actuelle dans la banque de questions.
@@ -123,7 +123,21 @@ Les actions disponibles sont (de gauche à droite):
   - Vérification : script Python permettant de vérifier la réponse de l'étudiant. Si ce champ est vide, la réponse de l'étudiant est comparée avec la valeur présente dans le champ *Réponse*. Dans le cas contraire, le concepteur de la question peut utiliser dans le script de vérification la variable prédéfinie reponse_etudiant pour récupérer la réponse de l'étudiant. Dans l'exemple ci-dessous, la réponse correcte est *s=s+i*. Pour éviter de ne pas prendre en compte des réponses du type *s = s + i*  ou *s=   s+i*, on écrit un script de vérification afin de filtrer les espaces présents dans la réponse de l'étudiant.
     <img src="img/10_exemple_verif.PNG">
   
-  ## Création d'une question
+  <a name="Alea"></a>
   
+  ## Questions aléatoires
   
+  Afin de générer des questions dépendant de données aléatoires, il suffit de sélectionner **Python** dans le champ **Langage** du formulaire de création d'une question. Ceci fait apparaître un nouveau champ intitulé **Script** dans lequel l'utilisateur pourra générer des variables qui pourront être utilisées dans l'énoncé de la question ainsi que dans le champ **Reponse** et les différents champs de Choix dans le cas d'une question à choix multiple. 
+  
+  **Attention** : dans les champs **Enoncé**, **Reponse** ou les champs **Choix**, on ne peut utiliser qu'une variable définie dans le script, on ne peut pas utiliser une instruction Python.
+  
+  Dans le script Python, le nom des variables destinées à être utilisées dans les champs **Enoncé** , **Reponse**  ou **Choix** doit commencer par **__**.  
+  
+  Dans les champs **Enoncé**, **Reponse** ou **Choix**, afin d'utiliser une variable définie dans le script, on utilise la syntaxe **{{__nom-variable}}**.
+  
+  Dans l'exemple ci-dessous, on créé une question qui demande à l'étudiant de calculer le pgcd de 2 entiers. Les 2 entiers sont générés aléatoirement  grâce à un script Python et la bonne réponse est aussi calculée par le script.
+  <img src="img/13_exemple_alea2.PNG">
+  
+  On utilise alors les 2 variables \_\_val1 et \__val2 dans l'énoncé.
+  <img src="img/12_exemple_alea1.PNG">
 
