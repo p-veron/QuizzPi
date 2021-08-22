@@ -80,4 +80,4 @@ En cliquant sur l'énoncé d'une question, on a un aperçu rapide de son contenu
 
 
 
-Pour chaque question affichée, un ensemble d'action est possible via la barre d'icones <img src="img/07_menu_banque_questions.PNG" style="max-width="50%;" height="50%">
+Pour chaque question affichée, un ensemble d'action est possible via la barre d'icones <img src="img/07_menu_banque_questions.PNG" style="max-width=50%;" height="50%">
