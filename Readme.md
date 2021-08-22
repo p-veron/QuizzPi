@@ -9,6 +9,7 @@
     - [Dupliquer une question](#Dupliquer)
     - [Supprimer une question](#Supprimer)
     - [Ajouter une question](#AjoutQuestion)
+- [Questions aléatoires](#Alea)
 
 <a name="QuizzPi"></a>
 
