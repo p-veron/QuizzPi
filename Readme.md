@@ -80,4 +80,23 @@ En cliquant sur l'énoncé d'une question, on a un aperçu rapide de son contenu
 
 
 
-Pour chaque question affichée, un ensemble d'action est possible via la barre d'icones <img src="img/07_menu_banque_questions.PNG" height="35">
+Pour chaque question affichée, un ensemble d'action est possible via la barre d'icones
+
+<center> <img src="img/07_menu_banque_questions.PNG" height="45"></center>
+
+Les actions disponibles sont (de gauche à droite):
+
+- **Aperçu de la question** : en cliquant sur la loupe, un aperçu de la question tel quelle sera présentée à l'utilisateur final est affichée. Si l'énoncé initial de la question contient des données aléatoires, chaque click sur l'aperçu de la question affiche un énoncé différent.
+  <img src="img/08_apercu_questions.PNG">
+
+  Dans la fenêtre d'aperçu, vous pouvez tester votre question en soumettant une réponse (pour l'exemple ci-dessus, en cliquant sur les choix disponibles). Ceci aura pour effet de faire apparaître le bouton Vérifier Réponse qui permettra de contrôler la validité de votre réponse en cliquant dessus. 
+  <img src="img/09_verif_reponse.PNG">
+
+- **Edition d'une question** : en cliquant sur le crayon, on accède à l'interface permettant d'éditer les différents paramètres d'une question (voir le paragraphe Création d'une question).
+
+- **Dupliquer une question** : en cliquant sur l'icone représentant deux rectangles superposés, on créé une copie de la question actuelle dans la banque de questions.
+
+- **Supprimer une question** : en cliquant sur l'icone de la poubelle, la question sera effacée. Pour supprimer un ensemble de questions, il suffit de les sélectionner en cliquant sur la case à cocher située à côté du titre de la question, puis de cliquer sur le bouton **Supprimer** situé en bas de page. 
+  *Remarque : en cliquant sur la case à cocher située à coté de l'intitulé <font color="blue">Titre</font>, on séléctionne l'ensemble des questions de la catégorie courante.*
+
+  
