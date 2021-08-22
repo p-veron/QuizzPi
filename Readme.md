@@ -5,6 +5,9 @@
 - [Menu de l'interface de gestion](#Menus)
   - [Catégorie-Questions](#Catégorie-Questions)
   - [Banque de questions](#Banque)
+    - [Editer une question](#Editer)
+    - [Dupliquer une question](#Dupliquer)
+    - [Supprimer une question](#Supprimer)
 
 <a name="QuizzPi"></a>
 
@@ -92,12 +95,16 @@ Les actions disponibles sont (de gauche à droite):
   Dans la fenêtre d'aperçu, vous pouvez tester votre question en soumettant une réponse (pour l'exemple ci-dessus, en cliquant sur les choix disponibles). Ceci aura pour effet de faire apparaître le bouton Vérifier Réponse qui permettra de contrôler la validité de votre réponse en cliquant dessus. 
   <img src="img/09_verif_reponse.PNG">
 
-- **Edition d'une question** : en cliquant sur le crayon, on accède à l'interface permettant d'éditer les différents paramètres d'une question (voir le paragraphe Création d'une question).
+  <a name="Editer"></a>
+
+- **Editer une question** : en cliquant sur le crayon, on accède à l'interface permettant d'éditer les différents paramètres d'une question (voir le paragraphe Création d'une question).
+  <a name="Dupliquer"></a>
 
 - **Dupliquer une question** : en cliquant sur l'icone représentant deux rectangles superposés, on créé une copie de la question actuelle dans la banque de questions.
+  <a name="Supprimer"></a>
 
 - **Supprimer une question** : en cliquant sur l'icone de la poubelle, la question sera effacée. Pour supprimer un ensemble de questions, il suffit de les sélectionner en cliquant sur la case à cocher située à côté du titre de la question, puis de cliquer sur le bouton **Supprimer** situé en bas de page. 
-  *Remarque : en cliquant sur la case à cocher située à coté de l'intitulé <font color="blue">Titre</font>, on séléctionne l'ensemble des questions de la catégorie courante.*
+  *Remarque : en cliquant sur la case à cocher située à coté de l'intitulé **Titre** située dans la première ligne de la banque de questions, on séléctionne l'ensemble des questions de la catégorie courante.*
 
   Création d'un question
 
