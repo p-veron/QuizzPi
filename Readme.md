@@ -12,7 +12,7 @@ L'objectif de ce projet et de proposer un environnement autonome s'exécutant su
 Les questions peuvent intégrées des données aléatoires générées à partir d'un script Python. De même la vérification de la réponse peut être effectué à partir d'un script Python.
 
 <a name="Install"/>
-## Installation sur un Raspberry 4
+## Install
 
 <a name="Connexion"/>
 ## Connexion à l'interface de gestion
@@ -34,5 +34,3 @@ Via le menu **"Se Connecter"**, l'enseignant entre son login et son mot de passe
 Une fois identifié, il accède à l'interface de gestion 
 
 <img src="img/02_dashboard.PNG">
-
-### Catégorie-Questions
