@@ -99,4 +99,7 @@ Les actions disponibles sont (de gauche à droite):
 - **Supprimer une question** : en cliquant sur l'icone de la poubelle, la question sera effacée. Pour supprimer un ensemble de questions, il suffit de les sélectionner en cliquant sur la case à cocher située à côté du titre de la question, puis de cliquer sur le bouton **Supprimer** situé en bas de page. 
   *Remarque : en cliquant sur la case à cocher située à coté de l'intitulé <font color="blue">Titre</font>, on séléctionne l'ensemble des questions de la catégorie courante.*
 
+  Création d'un question
+
   
+
