@@ -9,6 +9,7 @@
     - [Dupliquer une question](#Dupliquer)
     - [Supprimer une question](#Supprimer)
     - [Ajouter une question](#AjoutQuestion)
+  - [Catégorie-Quizz](#CatQuizz)
 - [Questions aléatoires](#Alea)
 
 <a name="QuizzPi"></a>
@@ -123,6 +124,17 @@ Les actions disponibles sont (de gauche à droite):
   - Réponse : champ contenant la réponse attendue. Ce champ est aussi utilisé pour afficher la réponse aux étudiants lors du déroulement du quizz.
   - Vérification : script Python permettant de vérifier la réponse de l'étudiant. Si ce champ est vide, la réponse de l'étudiant est comparée avec la valeur présente dans le champ *Réponse*. Dans le cas contraire, le concepteur de la question peut utiliser dans le script de vérification la variable prédéfinie reponse_etudiant pour récupérer la réponse de l'étudiant. Dans l'exemple ci-dessous, la réponse correcte est *s=s+i*. Pour éviter de ne pas prendre en compte des réponses du type *s = s + i*  ou *s=   s+i*, on écrit un script de vérification afin de filtrer les espaces présents dans la réponse de l'étudiant.
     <img src="img/10_exemple_verif.PNG">
+  
+  <a name="CatQuizz"></a>
+  
+  ### Catégorie-Quizz
+  
+  Ce menu permet de créer des catégories afin d'y classer les quizz. Pour chaque catégorie créée, le nombre de quizz présents dans cette dernière est indiqué entre parenthèses.
+  <img src="img/14_categories.PNG">
+  
+  <a name="Quizz"></a>
+  
+  ### Quizz
   
   <a name="Alea"></a>
   
