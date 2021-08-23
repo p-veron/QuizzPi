@@ -1,4 +1,4 @@
-##### Table des matières
+## Table des matières
 - [QuizzPi](#QuizzPi)
 - [Installation sur un Raspberry 4](#Install)
 - [Connexion à l'interface de gestion](#Connexion)
@@ -10,7 +10,12 @@
     - [Supprimer une question](#Supprimer)
     - [Ajouter une question](#AjoutQuestion)
   - [Catégorie-Quizz](#CatQuizz)
+    - [Editer un Quizz](#EditerQuizz)
+    - [Dupliquer un Quizz](#DupliquerQuizz)
+    - [Supprimer un Quizz](#SupprimerQuizz)
+    - [Ajouter un Quizz](#AjoutQuizz)
 - [Questions aléatoires](#Alea)
+- [Démarrer un Quizz](#StartQuizz)
 
 <a name="QuizzPi"></a>
 
@@ -85,7 +90,6 @@ En cliquant sur l'énoncé d'une question, on a un aperçu rapide de son contenu
 <img src="img/06_apercu_intitule_question.PNG">
 
 
-
 Pour chaque question affichée, un ensemble d'action est possible via la barre d'icones
 
 <center> <img src="img/07_menu_banque_questions.PNG" height="45"></center>
@@ -93,7 +97,7 @@ Pour chaque question affichée, un ensemble d'action est possible via la barre d
 Les actions disponibles sont (de gauche à droite):
 
 - **Aperçu de la question** : en cliquant sur la loupe, un aperçu de la question tel quelle sera présentée à l'utilisateur final est affichée. Si l'énoncé initial de la question contient des données aléatoires, chaque click sur l'aperçu de la question affiche un énoncé différent.
-  <img src="img/08_apercu_questions.PNG">
+<img src="img/08_apercu_questions.PNG">
 
   Dans la fenêtre d'aperçu, vous pouvez tester votre question en soumettant une réponse (pour l'exemple ci-dessus, en cliquant sur les choix disponibles). Ceci aura pour effet de faire apparaître le bouton **Vérifier Réponse** qui permettra de contrôler la validité de votre réponse en cliquant dessus. 
   <img src="img/09_verif_reponse.PNG">
@@ -106,7 +110,7 @@ Les actions disponibles sont (de gauche à droite):
 - **Dupliquer une question** : en cliquant sur l'icone représentant deux rectangles superposés, on créé une copie de la question actuelle dans la banque de questions.
   <a name="Supprimer"></a>
 
-- **Supprimer une question** : en cliquant sur l'icone de la poubelle, la question sera effacée. Pour supprimer un ensemble de questions, il suffit de les sélectionner en cliquant sur la case à cocher située à côté du titre de la question, puis de cliquer sur le bouton **Supprimer** situé en bas de page. 
+- **Supprimer une question** : en cliquant sur l'icone de la poubelle, la question sera supprimer. Pour supprimer un ensemble de questions, il suffit de les sélectionner en cliquant sur la case à cocher située à côté du titre de la question, puis de cliquer sur le bouton **Supprimer** situé en bas de page. 
   *Remarque : en cliquant sur la case à cocher située à coté de l'intitulé **Titre** située dans la première ligne de la banque de questions, on séléctionne l'ensemble des questions de la catégorie courante.*
   <a name="AjoutQuestion"></a>
   
@@ -125,32 +129,88 @@ Les actions disponibles sont (de gauche à droite):
   - Vérification : script Python permettant de vérifier la réponse de l'étudiant. Si ce champ est vide, la réponse de l'étudiant est comparée avec la valeur présente dans le champ *Réponse*. Dans le cas contraire, le concepteur de la question peut utiliser dans le script de vérification la variable prédéfinie reponse_etudiant pour récupérer la réponse de l'étudiant. Dans l'exemple ci-dessous, la réponse correcte est *s=s+i*. Pour éviter de ne pas prendre en compte des réponses du type *s = s + i*  ou *s=   s+i*, on écrit un script de vérification afin de filtrer les espaces présents dans la réponse de l'étudiant.
     <img src="img/10_exemple_verif.PNG">
   
-  <a name="CatQuizz"></a>
-  
-  ### Catégorie-Quizz
-  
-  Ce menu permet de créer des catégories afin d'y classer les quizz. Pour chaque catégorie créée, le nombre de quizz présents dans cette dernière est indiqué entre parenthèses.
-  <img src="img/14_categories.PNG">
-  
-  <a name="Quizz"></a>
-  
-  ### Quizz
-  
-  <a name="Alea"></a>
-  
-  ## Questions aléatoires
-  
-  Afin de générer des questions dépendant de données aléatoires, il suffit de sélectionner **Python** dans le champ **Langage** du formulaire de création d'une question. Ceci fait apparaître un nouveau champ intitulé **Script** dans lequel l'utilisateur pourra générer des variables qui pourront être utilisées dans l'énoncé de la question ainsi que dans le champ **Reponse** et les différents champs de Choix dans le cas d'une question à choix multiple. 
-  
-  **Attention** : dans les champs **Enoncé**, **Reponse** ou les champs **Choix**, on ne peut utiliser qu'une variable définie dans le script, on ne peut pas utiliser une instruction Python.
-  
-  Dans le script Python, le nom des variables destinées à être utilisées dans les champs **Enoncé** , **Reponse**  ou **Choix** doit commencer par **__**.  
-  
-  Dans les champs **Enoncé**, **Reponse** ou **Choix**, afin d'utiliser une variable définie dans le script, on utilise la syntaxe **{{__nom-variable}}**.
-  
-  Dans l'exemple ci-dessous, on créé une question qui demande à l'étudiant de calculer le pgcd de 2 entiers. Les 2 entiers sont générés aléatoirement  grâce à un script Python et la bonne réponse est aussi calculée par le script.
-  <img src="img/13_exemple_alea2.PNG">
-  
-  On utilise alors les 2 variables \_\_val1 et \__val2 dans l'énoncé.
-  <img src="img/12_exemple_alea1.PNG">
+
+<a name="CatQuizz"></a>
+### Catégorie-Quizz
+
+Ce menu permet de créer des catégories afin d'y classer les quizz. Pour chaque catégorie créée, le nombre de quizz présents dans cette dernière est indiqué entre parenthèses.
+<img src="img/14_categories.PNG">
+<a name="Quizz"></a>
+
+### Quizz
+
+C'est à partir de ce menu que l'on peut lister les quizz disponibles, ajouter de nouveaux quizz,  modifier les quizz existants ou en supprimer certains.
+<img src="img/15_accueil_quizz.PNG">L'option *Choisir une catégorie* permet de n'afficher que les quizz de la catégorie sélectionnée. 
+
+Pour chaque question affichée, un ensemble d'action est possible via la barre d'icones
+
+<center> <img src="img/21_menu_quizz.PNG" height="35"></center>
+
+Les actions disponibles sont (de gauche à droite):
+<a name="LaunchQuizz"></a>
+
+- **Lancer un quizz** : cette icone permet de démarrer un quizz lors d'une séance avec les étudiants (cf. paragraphe [Démarrer un quizz](#StartQuizz)).
+  <a name="EditerQuizz"></a>
+
+- **Editer un quizz** : en cliquant sur l'icone du crayon, on accède à l'interface permettant d'éditer les différents paramètres d'un quizz (voir le paragraphe [Ajouter un quizz](#AjoutQuizz)).
+  <a name="DupliquerQuizz"></a>
+
+- **Dupliquer un quizz** : en cliquant sur l'icone représentant deux rectangles superposés, on créé une copie du quizz actuel.
+  <a name="SupprimerQuizz"></a>
+
+- **Supprimer un quizz** : en cliquant sur l'icone de la poubelle, le quizz sera supprimée. Pour supprimer un ensemble de quizz, il suffit de les sélectionner en cliquant sur la case à cocher située à côté du titre du quizz, puis de cliquer sur le bouton **Supprimer** situé en bas de page. 
+  *Remarque : en cliquant sur la case à cocher située à coté de l'intitulé **Titre** située dans la première ligne de la liste des quizz, on séléctionne l'ensemble des quizz de la catégorie courante.*
+
+- **Ajouter un quizz** : afin de créer un nouveau quizz, il suffit de cliquer sur le bouton **Ajouter**. Les différentes informations à fournir pour élaborer un quizz sont :
+
+  - *Titre* : le titre du quizz
+  - *Catégorie* : le nom de la catégorie dans laquelle ranger le quizz
+  - *Indicateur de mélange de questions* : une option permettant d'indiquer si à chaque lancement du quizz, les questions doivent être présentées ou non dans un ordre aléatoire.
+
+  <img src="img/16_nouveau_quizz.PNG">
+
+  Une fois ces informations fournies, en cliquant sur le bouton **Sauvegarder**, un nouveau bouton apparaît, permettant de rajouter des questions au quizz.
+
+  <img src="img/17_quizz_ajout_questions.PNG">
+
+  En cliquant sur le bouton **Ajouter Questions**, une fenêtre apparaît avec la liste des questions sauvegardées dans la banque de questions. Cette liste peut être filtrée en sélectionnant une catégorie de questions. Chaque question peut être prévisualisée en cliquant sur l'icone de la loupe. Pour sélectionner les questions à rajouter au quizz, il suffit de cliquer sur la case à cocher située à gauche du titre de la question. On peut sélectionner l'ensemble des questions en cliquant sur la case à cocher située à côté de l'intitulé **Titre**.
+
+  <img src="img/18_quizz_ajout_liste_questions.PNG">
+
+  Une fois la sélection des questions effectuées, il suffit de cliquer sur le bouton **Ajouter** afin de la ajouter au quizz. On revient alors à la fenêtre d'édition du quizz où apparaissent les questions sélectionnées.
+
+  <img src="img/19_quizz_affichage_contenu.PNG">
+
+  A partir de cette liste on peut :
+
+  - prévisualisation une question en cliquant sur l'icone de la loupe
+
+  - afficher le texte brut de l'énoncé d'une question en cliquant dans la zone de l'énoncé (les variables aléatoires ne sont pas interprétées)
+
+  - supprimer une ou plusieurs questions en sélectionnant les cases à cocher présentes à côté du titre des questions puis en cliquant sur le bouton **Supprimer du quizz la sélection**. Toutes les questions peuvent être sélectionnées en cliquant sur la case à cocher située en première ligne de la liste à côté de l'intitulé **Titre**.
+
+    <img src="img/20_quizz_intitule_question.PNG"> 
+
+  - déplacer des questions pour qu'elles s'affichent dans un ordre précis lors du démarrage du quizz dans le cas où l'option Mélanger les questions a été désactivé. Pour déplacer une question il suffit de cliquer sur le titre et tout en maintenant le bouton enfoncé de déplacer la questions à la position voulue et de relacher le bouton de la souris.
+
+     <img src="img/22_deplacement_quizz.gif">
+
+
+<a name="Alea"></a>
+
+## Questions aléatoires
+
+Afin de générer des questions dépendant de données aléatoires, il suffit de sélectionner **Python** dans le champ **Langage** du formulaire de création d'une question. Ceci fait apparaître un nouveau champ intitulé **Script** dans lequel l'utilisateur pourra générer des variables qui pourront être utilisées dans l'énoncé de la question ainsi que dans le champ **Reponse** et les différents champs de Choix dans le cas d'une question à choix multiple. 
+
+**Attention** : dans les champs **Enoncé**, **Reponse** ou les champs **Choix**, on ne peut utiliser qu'une variable définie dans le script, on ne peut pas utiliser une instruction Python.
+
+Dans le script Python, le nom des variables destinées à être utilisées dans les champs **Enoncé** , **Reponse**  ou **Choix** doit commencer par **__**.  
+
+Dans les champs **Enoncé**, **Reponse** ou **Choix**, afin d'utiliser une variable définie dans le script, on utilise la syntaxe **{{__nom-variable}}**.
+
+Dans l'exemple ci-dessous, on créé une question qui demande à l'étudiant de calculer le pgcd de 2 entiers. Les 2 entiers sont générés aléatoirement  grâce à un script Python et la bonne réponse est aussi calculée par le script.
+<img src="img/13_exemple_alea2.PNG">
+
+On utilise alors les 2 variables \_\_val1 et \__val2 dans l'énoncé.
+<img src="img/12_exemple_alea1.PNG">
 
