@@ -130,7 +130,7 @@ Les actions disponibles sont (de gauche à droite):
   - Enoncé : l'énoncé de la question. Cette énoncé peut contenir du code TeX. Le menu **TeX** permet de prévisualiser le résultat. Il suffit pour cela de sélectionner le code à interpréter et de cliquer sur le menu **TeX**.
   
     <img src="img/35_preview_tex.gif">
-    Il est possible aussi d'insérer du code Python dans un énoncé en cliquant sur l'icone **{;}**. Ceci ouvre une fenêtre permettant de saisir le code Python. Attention, à ce niveau là il n'y a aucune coloration syntaxique. Une fois le code saisie, cliquez sur **Enregistrer** et le code Python apparaîtra dans l'énoncé dans une boite grisée et une coloration syntaxique est appliquée.
+    Du code Python peut être inséré dans un énoncé en cliquant sur l'icone **{;}**. Ceci ouvre une fenêtre permettant de saisir le code Python. Attention, à ce niveau là il n'y a aucune coloration syntaxique. Une fois le code saisi, cliquez sur **Enregistrer** et le code Python apparaîtra dans l'énoncé dans une boite grisée et une coloration syntaxique est appliquée.
   
     <img src="img/36_insert_code.gif">
   
