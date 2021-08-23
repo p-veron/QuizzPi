@@ -117,15 +117,24 @@ Les actions disponibles sont (de gauche à droite):
 - **Ajouter une question** : afin de créer une nouvelle question, il suffit de cliquer sur le bouton **Ajouter**. Les différentes informations à fournir pour élaborer une question sont :
   
   - *Titre* : le titre de la question
+  
   - *Catégorie* : le nom de la catégorie dans laquelle ranger la question
+  
   - *Type* : permet de préciser si la  question est de type simple ou multiple. Par défaut, le type simple est sélectionné. En sélectionnant le type multiple, de nouveaux champs apparaissent permettant de :
     -  préciser si lors de la visualisation de la question, les différents choix possibles doivent être mélangés aléatoirement ou non,
     - proposer jusqu'à 8 choix possibles de réponse.
       <img src="img/11_exemple_multiple.PNG">
+    
   - Points : le nombre de points attribués à la question (non utilisé dans la version actuelle de QuizzPi)
-  - Enoncé : l'énoncé de la question.
+  
+  - Enoncé : l'énoncé de la question. Cette énoncé peut cntenir du code TeX. Le menu **TeX** permet de prévisualiser le résultat. Il suffit pour cela de séectionner le code à interpréter et de cliquer sur le menu **TeX**.
+  
+    <img src="img/35_preview_tex.gif">
+  
   - Langage : permet de sélectionner le langage qui sera utilisé pour écrire le script de génération des données aléatoires (Python ou SageMath). Seul Python est géré par la version actuelle de QuizzPi.
+  
   - Réponse : champ contenant la réponse attendue. Ce champ est aussi utilisé pour afficher la réponse aux étudiants lors du déroulement du quizz.
+  
   - Vérification : script Python permettant de vérifier la réponse de l'étudiant. Si ce champ est vide, la réponse de l'étudiant est comparée avec la valeur présente dans le champ *Réponse*. Dans le cas contraire, le concepteur de la question peut utiliser dans le script de vérification la variable prédéfinie reponse_etudiant pour récupérer la réponse de l'étudiant. Dans l'exemple ci-dessous, la réponse correcte est *s=s+i*. Pour éviter de ne pas prendre en compte des réponses du type *s = s + i*  ou *s=   s+i*, on écrit un script de vérification afin de filtrer les espaces présents dans la réponse de l'étudiant.
     <img src="img/10_exemple_verif.PNG">
   
