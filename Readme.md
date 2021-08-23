@@ -10,10 +10,12 @@
     - [Supprimer une question](#Supprimer)
     - [Ajouter une question](#AjoutQuestion)
   - [Catégorie-Quizz](#CatQuizz)
+  - [Quizz](#Quizz)
     - [Editer un Quizz](#EditerQuizz)
     - [Dupliquer un Quizz](#DupliquerQuizz)
     - [Supprimer un Quizz](#SupprimerQuizz)
     - [Ajouter un Quizz](#AjoutQuizz)
+  - [Etudiants](#Etudiants)
 - [Questions aléatoires](#Alea)
 - [Démarrer un Quizz](#StartQuizz)
 
@@ -207,6 +209,13 @@ Les actions disponibles sont (de gauche à droite):
 
      <img src="img/22_deplacement_quizz.gif">
 
+<a name="Etudiants"></a>
+
+### Etudiants
+
+Ce menu permet d'indiquer quels sont les étudiants qui pourront se connecter pour effectuer un quizz.
+
+<img src="img/34_liste_etudiants.PNG">
 
 <a name="Alea"></a>
 
@@ -225,4 +234,10 @@ Dans l'exemple ci-dessous, on créé une question qui demande à l'étudiant de 
 
 On utilise alors les 2 variables \_\_val1 et \__val2 dans l'énoncé.
 <img src="img/12_exemple_alea1.PNG">
+
+## Démarrer un Quizz
+
+En cliquant sur l'icone <img src="img/37_launch_quizz.png" height="35"> associé à un quizz, une nouvelle fenêtre s'ouvre permettant aux étudiants de scanner à partir de leur téléphone portable un QR code pour accéder à l'interface leur permettant d'enregistrer leurs réponses. Si les étudiants ne disposent pas de lecteur de QR code, l'adresse du site où ils doivent se connecter à partir du navigateur présent sur leur téléphone est aussi affiché. L'enseignant peut voir au fur et à mesure le nombre d'étudiants connectés.
+
+<img src="img/22_launchquizz.PNG"> 
 
