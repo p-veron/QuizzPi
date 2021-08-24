@@ -218,6 +218,19 @@ Ce menu permet d'indiquer quels sont les étudiants qui pourront se connecter po
 
 <img src="img/34_liste_etudiants.PNG">
 
+Pour ajouter un étudiant à la liste des étudiants pouvant se connecter à QuizzPi, il suffit de cliquer sur l'icone + et de fournir les renseignements suivants :
+
+- Nom,
+- Prénom,
+- Courriel (il servira d'identifiant à l'étudiant pour se connecter à l'interface de saisie des réponses lors du déroulement du quizz),
+- Filière.
+
+<img src="img/41_ajouter_etudiant.PNG">
+
+Il est possible d'importer directement une liste d'étudiants si cette dernière est au format CSV. L'importation se fait en cliquant sur le bouton **Parcourir**. Le format du fichier doit être le suivant :
+
+<p align="center">*Nom,Prenom,Courriel,Filiere*</p>
+
 <a name="Alea"></a>
 
 ## Questions aléatoires
