@@ -326,7 +326,7 @@ Une fois le quizz terminé, l'étudiant obtient sur son téléphone des statisti
 
 ## Docker
 
-QuizzPi peut être testé localement sur un ordinateur en récupérant l'image docker situé à l'adresse suivante :
+QuizzPi peut être testé localement sur un ordinateur en récupérant l'image docker située à l'adresse suivante :
 
 Installez l'environnement [web2py](http://www.web2py.com/init/default/download) (version pour Python 3.7) dans un répertoire de votre choix. Nous nommerons ce répertoire **RepWeb2Py** pour la suite.
 
@@ -352,7 +352,7 @@ Pour simuler le téléphone portable d'un étudiant, ouvrez dans ce même naviga
 
  Saisissez ensuite l'adresse : https://127.0.0.1/quizzpi/runquizz.
 
-
+<img src="img/42_simul.gif">
 
 <a name="TODO"></a>
 
