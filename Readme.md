@@ -237,7 +237,62 @@ On utilise alors les 2 variables \_\_val1 et \__val2 dans l'énoncé.
 
 ## Démarrer un Quizz
 
-En cliquant sur l'icone <img src="img/37_launch_quizz.png" height="35"> associé à un quizz, une nouvelle fenêtre s'ouvre permettant aux étudiants de scanner à partir de leur téléphone portable un QR code pour accéder à l'interface leur permettant d'enregistrer leurs réponses. Si les étudiants ne disposent pas de lecteur de QR code, l'adresse du site où ils doivent se connecter à partir du navigateur présent sur leur téléphone est aussi affiché. L'enseignant peut voir au fur et à mesure le nombre d'étudiants connectés.
+Une fois le Raspberry Pi relié à un vidéoprojecteur, l'enseignant se connecte à son interface gestion et accède au menu Quizz. L'affichage de son navigateur est vidéoprojeté et visible par l'ensemble des étudiants. 
 
-<img src="img/22_launchquizz.PNG"> 
+En cliquant sur l'icone <img src="img/37_launch_quizz.png" height="35"> associé à un quizz, une nouvelle fenêtre s'ouvre permettant aux étudiants de scanner à partir de leur téléphone portable un QR code pour accéder à l'interface à partir de laquelle ils pourront soumettre leurs réponses. Si les étudiants ne disposent pas de lecteur de QR code, l'adresse du site où ils doivent se connecter à partir du navigateur présent sur leur téléphone est aussi affiché. L'enseignant peut voir au fur et à mesure le nombre d'étudiants connectés (indication en dessous de la barre de titre).
+
+<img src="img/22_launchquizz.PNG">
+
+Tant que l'enseignant n'a pas cliqué sur le bouton **Commencer** pour lancer le quizz, les étudiants ont un message d'attente sur leur téléphone. 
+
+<center><img src="img/23_patience.PNG" height="400"></center>
+
+Une fois que l'enseignant aura lancé le quizz, ils pourront accéder à l'interface permettant de répondre aux questions en cliquant sur la flèche droite <img src="img/38_fleche_droite.png" height="30">.
+
+Lorsque l'enseignant lance le démarrage du quizz, la première question s'affiche sur l'écran de projection :
+
+<img src="img/26_affichage_question.PNG">
+
+L'enseignant peut voir le nombre total d'étudiants qui se sont inscrits et le nombre d'étudiants qui ont répondu à la questions (compteur **nb reponses/nb etudiants** inscrits présent à gauche du numéro de la question).
+
+Pour répondre à la question en cours, les étudiants ont accès sur leur téléphone à l'interface suivante (dans le cas d'une question à choix multiple) :
+
+<img src="img/24_zapette.PNG" height="400">
+
+Ils n'ont qu'à cliquer sur les choix qui leur semblent être corrects (ici les boutons en jaune sont les choix effectués par l'étudiant). Une fois ses choix effectués, l'étudiant clique sur le bouton Envoyer, un message lui indique alors que sa réponse a été bien reçu et un bouton <img src="img/38_fleche_droite.PNG" height="25"> apparaît lui permettant de passer à la question suivante.
+
+<img src="img/25_zapette_reponse.PNG" height="400">
+
+Si l'étudiant clique sur <img src="img/38_fleche_droite.PNG" height="25"> avant que l'enseignant ne soit passé à la question suivante, il recevra sur son téléphone un message d'attente.
+
+Lorsque tous les étudiants ont répondu à la question courante, l'enseignant peut afficher la bonne réponse en cliquant sur le bouton Voir bonne réponse.
+
+<img src="img/27_affichage_reponse.PNG">
+
+Un bouton **Résultats** apparaît, celui-ci permet à l'enseignant d'afficher des statistiques sur les réponses effectuées.
+
+Dans le cas d'une question de type simple, où l'étudiant doit saisir manuellement la réponse, l'interface proposée à l'étudiant est la suivante :
+
+<img src="img/29_zapette_saisie.PNG" height="400">
+
+Une fois le quizz terminé, l'étudiant obtient sur son téléphone des statistiques sur les réponses effectuées et un émoji symbolise son résultat au quizz :
+
+| <img src="img/30_zapette_resultats.PNG" height="400"> | <img src="img/31_zapette_resultats.PNG" height="400"> | <img src="img/32_zapette_resultats.PNG" height="400"> |
+| ----------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- |
+
+<img src="img/ok.png" height="35">correspond au nombre de bonnes réponses sur le nombre total de questions.
+
+<img src="img/ko.png" height="35">correspond au nombre de mauvaises réponses sur le nombre total de questions.
+
+<img src="img/incomplet.png" height="35">correspond au nombre de  réponses incomplètes sur le nombre total de questions. Les réponses incomplètes ne concernent que les questions à choix multiple. Une réponse est considérée comme incomplète si elle constitue  un sous-ensemble de la réponse totale.
+
+<img src="img/nonrepondu.png" height="35">correspond au nombre de questions où l'étudiant n'a pas répondu sur le nombre total de questions. En effet dans l'interface proposé à l'étudiant, ce dernier peut très bien décider de ne pas répondre en cliquant directement sur le bouton **Envoyer**.
+
+ 
+
+
+
+
+
+
 
