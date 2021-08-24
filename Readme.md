@@ -18,6 +18,7 @@
   - [Etudiants](#Etudiants)
 - [Questions aléatoires](#Alea)
 - [Démarrer un Quizz](#StartQuizz)
+- [Tutoriel](#Tutoriel)
 
 <a name="QuizzPi"></a>
 
@@ -239,7 +240,13 @@ On utilise alors les 2 variables \_\_val1 et \__val2 dans l'énoncé.
 
 Une fois le Raspberry Pi relié à un vidéoprojecteur, l'enseignant se connecte à son interface gestion et accède au menu Quizz. L'affichage de son navigateur est vidéoprojeté et visible par l'ensemble des étudiants. 
 
-En cliquant sur l'icone <img src="img/37_launch_quizz.png" height="35"> associé à un quizz, une nouvelle fenêtre s'ouvre permettant aux étudiants de scanner à partir de leur téléphone portable un QR code pour accéder à l'interface à partir de laquelle ils pourront soumettre leurs réponses. Si les étudiants ne disposent pas de lecteur de QR code, l'adresse du site où ils doivent se connecter à partir du navigateur présent sur leur téléphone est aussi affiché. L'enseignant peut voir au fur et à mesure le nombre d'étudiants connectés (indication en dessous de la barre de titre).
+En cliquant sur l'icone <img src="img/37_launch_quizz.png" height="35"> associé à un quizz, une nouvelle fenêtre s'ouvre permettant aux étudiants de scanner à partir de leur téléphone portable un QR code pour accéder à l'interface à partir de laquelle ils pourront soumettre leurs réponses. Si les étudiants ne disposent pas de lecteur de QR code, l'adresse du site où ils doivent se connecter à partir du navigateur présent sur leur téléphone est aussi affiché. 
+
+Une fois cette adresse saisie, ou le QR code lu, les étudiants accèdent sur leur téléphone à une interface de connexion :
+
+<p align="center"><img src="img/39_zapette_connexion.PNG" height="400"></p>
+
+ L'enseignant peut voir au fur et à mesure le nombre d'étudiants connectés (indication en dessous de la barre de titre).
 
 <img src="img/22_launchquizz.PNG">
 
@@ -265,11 +272,17 @@ Ils n'ont qu'à cliquer sur les choix qui leur semblent être corrects (ici les 
 
 Si l'étudiant clique sur <img src="img/38_fleche_droite.png" height="25"> avant que l'enseignant ne soit passé à la question suivante, il recevra sur son téléphone un message d'attente.
 
-Lorsque tous les étudiants ont répondu à la question courante, l'enseignant peut afficher la bonne réponse en cliquant sur le bouton Voir bonne réponse.
+Lorsque tous les étudiants ont répondu à la question courante, l'enseignant peut afficher la bonne réponse en cliquant sur le bouton **Voir bonne réponse**.
 
 <img src="img/27_affichage_reponse.PNG">
 
-Un bouton **Résultats** apparaît, celui-ci permet à l'enseignant d'afficher des statistiques sur les réponses effectuées.
+Un bouton **Résultats** apparaît, celui-ci permet à l'enseignant d'afficher des statistiques sur les réponses effectuées. Ci-dessous, on voit que :
+
+- 1/3 des étudiants ont fourni une bonne réponse,
+- 1/3 des étudiants ont fourni une mauvaise réponse ou n'ont pas répondu à la question,
+- 1/3 des étudiants ont fourni une réponse incomplète. Ce type de réponse correspond uniquement aux questions à choix multiple. Une réponse est considérée comme incomplète si c'est un sous-ensemble de la réponse.
+
+<img src="img/40_resultats_question.PNG">
 
 Dans le cas d'une question de type simple, où l'étudiant doit saisir manuellement la réponse, l'interface proposée à l'étudiant est la suivante :
 
@@ -287,8 +300,23 @@ Une fois le quizz terminé, l'étudiant obtient sur son téléphone des statisti
 <img src="img/incomplet.png" height="35">correspond au nombre de  réponses incomplètes sur le nombre total de questions. Les réponses incomplètes ne concernent que les questions à choix multiple. Une réponse est considérée comme incomplète si elle constitue  un sous-ensemble de la réponse totale.
 
 <img src="img/nonrepondu.png" height="35">correspond au nombre de questions où l'étudiant n'a pas répondu sur le nombre total de questions. En effet dans l'interface proposé à l'étudiant, ce dernier peut très bien décider de ne pas répondre en cliquant directement sur le bouton **Envoyer**.
+<a name="Tutoriel"></a>
 
- 
+## Tutoriel
+
+ Afin de découvrir les différentes fonctionnalités de QuizzPi, la catégorie Tutoriel de la Banque de questions, comporte un ensemble de 17 questions essayant de couvrir l'ensemble des fonctionnalités de Quizzpi notamment en ce qui concerne la gestion des données aléatoires et la vérification par un script Python de la réponse de l'utilisateur.
+
+<img src="img/41_tutoriel.gif">
+
+## TODO
+
+- [ ] Intégrer totalement SageMath.
+- [ ] Dans l'interface étudiant de réponse à une question simple, restreindre les possibilités de saisie de l'étudiant afin d'éviter les problèmes d'interprétation de Python. Par exemple si la réponse doit être de type numérique, ne proposer que l'accès à un clavier numérique. De même si la réponse doit être une chaîne de caractères, proposer l'accès à un sous-ensemble du clavier.
+- [ ] Améliorer l'interface utilisateur.
+- [ ] Prévoir l'import JSON pour la banque de questions et les quizz.
+- [ ] Gérer les points affectés à une question.
+
+
 
 
 
