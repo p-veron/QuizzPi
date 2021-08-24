@@ -263,7 +263,7 @@ Ils n'ont qu'à cliquer sur les choix qui leur semblent être corrects (ici les 
 
 <img src="img/25_zapette_reponse.PNG" height="400">
 
-Si l'étudiant clique sur <img src="img/38_fleche_droite.PNG" height="25"> avant que l'enseignant ne soit passé à la question suivante, il recevra sur son téléphone un message d'attente.
+Si l'étudiant clique sur <img src="img/38_fleche_droite.png" height="25"> avant que l'enseignant ne soit passé à la question suivante, il recevra sur son téléphone un message d'attente.
 
 Lorsque tous les étudiants ont répondu à la question courante, l'enseignant peut afficher la bonne réponse en cliquant sur le bouton Voir bonne réponse.
 
