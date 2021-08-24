@@ -245,7 +245,7 @@ En cliquant sur l'icone <img src="img/37_launch_quizz.png" height="35"> associé
 
 Tant que l'enseignant n'a pas cliqué sur le bouton **Commencer** pour lancer le quizz, les étudiants ont un message d'attente sur leur téléphone. 
 
-<center><img src="img/23_patience.PNG" height="400"></center>
+<p align="center"><img src="img/23_patience.PNG" height="400"></p>
 
 Une fois que l'enseignant aura lancé le quizz, ils pourront accéder à l'interface permettant de répondre aux questions en cliquant sur la flèche droite <img src="img/38_fleche_droite.png" height="30">.
 
