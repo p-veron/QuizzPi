@@ -280,7 +280,7 @@ Pour répondre à la question en cours, les étudiants ont accès sur leur tél�
 
 <p align="center"><img src="img/24_zapette.PNG" height="400"></p>
 
-Ils n'ont qu'à cliquer sur les choix qui leur semblent être corrects (ici les boutons en jaune sont les choix effectués par l'étudiant). Une fois ses choix effectués, l'étudiant clique sur le bouton Envoyer, un message lui indique alors que sa réponse a été bien reçu et un bouton <img src="img/38_fleche_droite.PNG" height="25"> apparaît lui permettant de passer à la question suivante.
+Ils n'ont qu'à cliquer sur les choix qui leur semblent être corrects (ici les boutons en jaune sont les choix effectués par l'étudiant). Une fois ses choix effectués, l'étudiant clique sur le bouton Envoyer, un message lui indique alors que sa réponse a été bien reçu et un bouton <img src="img/38_fleche_droite.png" height="25"> apparaît lui permettant de passer à la question suivante.
 
 <p align="center"><img src="img/25_zapette_reponse.PNG" height="400"></p>
 
