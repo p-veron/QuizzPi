@@ -257,11 +257,11 @@ L'enseignant peut voir le nombre total d'étudiants qui se sont inscrits et le n
 
 Pour répondre à la question en cours, les étudiants ont accès sur leur téléphone à l'interface suivante (dans le cas d'une question à choix multiple) :
 
-<img src="img/24_zapette.PNG" height="400">
+<p align="center"><img src="img/24_zapette.PNG" height="400"></p>
 
 Ils n'ont qu'à cliquer sur les choix qui leur semblent être corrects (ici les boutons en jaune sont les choix effectués par l'étudiant). Une fois ses choix effectués, l'étudiant clique sur le bouton Envoyer, un message lui indique alors que sa réponse a été bien reçu et un bouton <img src="img/38_fleche_droite.PNG" height="25"> apparaît lui permettant de passer à la question suivante.
 
-<img src="img/25_zapette_reponse.PNG" height="400">
+<p align="center"><img src="img/25_zapette_reponse.PNG" height="400"></p>
 
 Si l'étudiant clique sur <img src="img/38_fleche_droite.png" height="25"> avant que l'enseignant ne soit passé à la question suivante, il recevra sur son téléphone un message d'attente.
 
@@ -273,7 +273,7 @@ Un bouton **Résultats** apparaît, celui-ci permet à l'enseignant d'afficher d
 
 Dans le cas d'une question de type simple, où l'étudiant doit saisir manuellement la réponse, l'interface proposée à l'étudiant est la suivante :
 
-<img src="img/29_zapette_saisie.PNG" height="400">
+<p align="center"><img src="img/29_zapette_saisie.PNG" height="400"></p>
 
 Une fois le quizz terminé, l'étudiant obtient sur son téléphone des statistiques sur les réponses effectuées et un émoji symbolise son résultat au quizz :
 
