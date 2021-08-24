@@ -19,6 +19,7 @@
 - [Questions aléatoires](#Alea)
 - [Démarrer un Quizz](#StartQuizz)
 - [Tutoriel](#Tutoriel)
+- [TODO](#TODO)
 
 <a name="QuizzPi"></a>
 
@@ -320,6 +321,7 @@ Une fois le quizz terminé, l'étudiant obtient sur son téléphone des statisti
  Afin de découvrir les différentes fonctionnalités de QuizzPi, la catégorie Tutoriel de la Banque de questions, comporte un ensemble de 17 questions essayant de couvrir l'ensemble des fonctionnalités de Quizzpi notamment en ce qui concerne la gestion des données aléatoires et la vérification par un script Python de la réponse de l'utilisateur.
 
 <img src="img/41_tutoriel.gif">
+<a name="TODO"></a>
 
 ## TODO
 
