@@ -19,6 +19,7 @@
 - [Questions aléatoires](#Alea)
 - [Démarrer un Quizz](#StartQuizz)
 - [Tutoriel](#Tutoriel)
+- [Docker](#Docker) 
 - [TODO](#TODO)
 
 <a name="QuizzPi"></a>
@@ -321,6 +322,38 @@ Une fois le quizz terminé, l'étudiant obtient sur son téléphone des statisti
  Afin de découvrir les différentes fonctionnalités de QuizzPi, la catégorie Tutoriel de la Banque de questions, comporte un ensemble de 17 questions essayant de couvrir l'ensemble des fonctionnalités de Quizzpi notamment en ce qui concerne la gestion des données aléatoires et la vérification par un script Python de la réponse de l'utilisateur.
 
 <img src="img/41_tutoriel.gif">
+<a name="Docker"></a>
+
+## Docker
+
+QuizzPi peut être testé localement sur un ordinateur en récupérant l'image docker situé à l'adresse suivante :
+
+Installez l'environnement [web2py](http://www.web2py.com/init/default/download) (version pour Python 3.7) dans un répertoire de votre choix. Nous nommerons ce répertoire **RepWeb2Py** pour la suite.
+
+Clonez le dépôt git dans le répertoire **RepWeb2Py/web2py/applications/**.
+
+Une fois l'image docker installée sur votre système, exécutez la commande suivante :
+
+```bash
+docker run -ti -p8000:80 -p4430:443 --volume RepWeb2Py/web2py:/home/www-data/web2py veron/web2py:2.9 /bin/bash
+```
+
+Ceci lance un shell bash. L'arborescence **web2py** se trouve dans le répertoire **/home/www-data/web2py** et correspond à ce qui se trouve dans votre répertoire **RepWeb2Py**. Lancez le serveur apache à partir du shell.
+
+```bash
+service apache2 start
+```
+
+Vous pouvez alors accéder à QuizzPi en lançant un navigateur sur votre ordinateur et en saisissant l'adresse : https://127.0.0.1/quizzpi/. Pour vous connecter à l'interface de gestion, vous pouvez utiliser le login *enseignant@univ-tln.fr* et pour mot de passe *enseignant*.
+
+Accéder au menu Quizz et lancer le démarrage d'un quizz.
+
+Pour simuler le téléphone portable d'un étudiant, ouvrez dans ce même navigateur une fenêtre de navigation privée. Sous Firefox, vous pouvez simuler l'écran d'un téléphone portable. Pour cela, ouvrez le menu *Outils supplémentaires*, puis *Vue adaptative*. 
+
+ Saisissez ensuite l'adresse : https://127.0.0.1/quizzpi/runquizz.
+
+
+
 <a name="TODO"></a>
 
 ## TODO
