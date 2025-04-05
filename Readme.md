@@ -362,6 +362,7 @@ Pour simuler le téléphone portable d'un étudiant, ouvrez dans ce même naviga
 - [ ] Dans l'interface étudiant de réponse à une question simple, restreindre les possibilités de saisie de l'étudiant afin d'éviter les problèmes d'interprétation de Python. Par exemple si la réponse doit être de type numérique, ne proposer que l'accès à un clavier numérique. De même si la réponse doit être une chaîne de caractères, proposer l'accès à un sous-ensemble du clavier.
 - [ ] Améliorer l'interface utilisateur.
 - [ ] Prévoir l'import JSON pour la banque de questions et les quizz.
+- [ ] Prévoir une possibilité de backup de la banque des questions avec un export JSON
 - [ ] Gérer les points affectés à une question.
 
 
